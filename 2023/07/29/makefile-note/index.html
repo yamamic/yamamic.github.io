@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>makefile-note | Kazi&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="makefile-	文件名格式:Makefile makefile GNUmakefile-	规则:    -	由目标、目标依赖、命令三部分构成(一个规则中不一定具有所有的三个规则,目标依赖和命令都可以无)            目标:目标依赖                命令            a.out:hello.c                gcc -o a.out hello.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="makefile-note">
+<meta property="og:url" content="http://example.com/2023/07/29/makefile-note/index.html">
+<meta property="og:site_name" content="Kazi&#39;s Blog">
+<meta property="og:description" content="makefile-	文件名格式:Makefile makefile GNUmakefile-	规则:    -	由目标、目标依赖、命令三部分构成(一个规则中不一定具有所有的三个规则,目标依赖和命令都可以无)            目标:目标依赖                命令            a.out:hello.c                gcc -o a.out hello.">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-07-29T06:45:49.000Z">
+<meta property="article:modified_time" content="2023-07-29T06:52:11.821Z">
+<meta property="article:author" content="Kazi Ball">
+<meta property="article:tag" content="record blog">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Kazi's Blog" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Kazi&#39;s Blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-makefile-note" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/07/29/makefile-note/" class="article-date">
+  <time class="dt-published" datetime="2023-07-29T06:45:49.000Z" itemprop="datePublished">2023-07-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      makefile-note
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>makefile<br>-	文件名格式:Makefile makefile GNUmakefile<br>-	规则:<br>    -	由目标、目标依赖、命令三部分构成(一个规则中不一定具有所有的三个规则,目标依赖和命令都可以无)<br>            目标:目标依赖<br>                命令<br>            a.out:hello.c<br>                gcc -o a.out hello.c<br>    -	规则可以有多个目标<br>            %.o:%.c<br>                gcc -o %.o %.c<br>-	make目标依赖:<br>    -	make第一次编译项目会依次编译所有的源文件。修改程序后make会根据文件的时间戳判断文件是否有更新来决定是否对其进行编译。<br>    -	头文件依赖:<br>            一般不将头文件添加至规则的目标依赖列表。这样如果头文件改变,不会重新编译源文件。可以将头文件添加至依赖目标中,但是<br>            这样过于繁琐。可以使用gcc -MM自动生成头文件依赖关系。</p>
+<ul>
+<li><p>   命令:</p>
+<ul>
+<li>   make对于规则中每一个命令会开一个进程执行,每条命令执行完make会检测其返回码。命令返回成功,则make继续执行下一个命令；命令<br>   执行失败,make终止执行当前的规则,退出编译。</li>
+</ul>
+</li>
+<li><p>   变量:</p>
+<ul>
+<li>   定义变量:val &#x3D; test</li>
+<li>   引用变量:$(val)</li>
+<li>   变量赋值:<ul>
+<li>   条件赋值:?&#x3D;	(如果变量未定义,则直接赋值,否则什么也不作)</li>
+<li>   追加赋值:+&#x3D;	(OBJS &#x3D; hello.o  OBJS+&#x3D; module.o 相当于 OBJS &#x3D; hello.o module.o)</li>
+</ul>
+</li>
+<li>   立即变量::&#x3D;</li>
+<li>   延迟展开变量:&#x3D;</li>
+</ul>
+</li>
+<li><p>   变量替换:</p>
+<ul>
+<li><p>   使用指定字符串替换变量中的字符串</p>
+<ul>
+<li>   .PHONY: all<br>   SRC :&#x3D; main.c sub.c<br>   OBJ :&#x3D; $(SRC:.c&#x3D;.o)<br>   替换后结果为 OBJ :&#x3D; main.o sub.o</li>
+</ul>
+</li>
+<li><p>   模式匹配替换</p>
+<ul>
+<li><p>   使用匹配符%匹配变量,使用%保留变量中的指定字符串然后其他部分使用指定字符串代替<br>   SRC &#x3D; main.c sub.c<br>   OBJ &#x3D; $(SRC:%.c&#x3D;%.o)</p>
+<p>   test: 1.o 2.o 3.o<br>   %.o:%.c</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>   环境变量</p>
+<ul>
+<li>   系统环境变量<ul>
+<li>   $(SHELL)	&#x2F;bin&#x2F;sh</li>
+<li>   $(MAKE)		make</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>   export传递变量</p>
+<ul>
+<li>   在shell环境下使用export命令相当于将变量声明为系统环境变量,make解析Makefile时会自动引入系统环境变量</li>
+</ul>
+</li>
+<li><p>   Makefile递归执行</p>
+<ul>
+<li>   make -C subdir1	subdir2	subdir3<br>   相当于<br>   cd subdir1 &amp;&amp; $(MAKE)<br>   cd subdir2 &amp;&amp; $(MAKE)<br>   cd subdir3 &amp;&amp; $(MAKE)</li>
+</ul>
+</li>
+<li><p>   override:</p>
+<ul>
+<li><p>   如果不希望命令行指定的变量值替代在Makefile中的原来定义,可以用override对变量进行声明<br>   override web &#x3D; <a target="_blank" rel="noopener" href="http://www.baidu.com/">www.baidu.com</a><br>   all:<br>       @echo “web &#x3D; $(web)”<br><br>   使用make web&#x3D;<a target="_blank" rel="noopener" href="http://www.taobao.com将始终输出web/">www.taobao.com将始终输出web</a> &#x3D; <a target="_blank" rel="noopener" href="http://www.baidu.com/">www.baidu.com</a></p>
+</li>
+<li><p>   如果编译程序时,无论在命令行指定什么参数,编译器在编译时必须打开-w选项,那么Makefile中CFLAGS应该这样定义<br>   override CFLAGS +&#x3D; -w<br>   当执行make CFLAGS&#x3D;-g时,CFLAGS就变成了-g -w</p>
+</li>
+</ul>
+</li>
+<li><p>   条件判断:</p>
+<ul>
+<li><p>   ifeq ($(val1),$(val2))<br>   else<br>   endif<br>   用于判断两个变量是否相等<br>   ifneq和ifeq恰恰相反</p>
+<p>   ifdef mode<br>   else<br>   endif<br>   用于判断变量mode是否被定义<br>   ifndef和ifdef恰恰相反</p>
+</li>
+</ul>
+</li>
+<li><p>   函数:</p>
+<ul>
+<li><p>   内嵌函数:可直接调用</p>
+<ul>
+<li><p>   subst:		替换字符串	$(subst .c,.o,$dir)	:subst把$(dir)中名称转为xx.o</p>
+</li>
+<li><p>   patsubst:	替换通配符	$(patsubst %.c,%.o,$(dir))	:	patsubst把$(dir)中的变量符合后缀为.c的全部替换为.o</p>
+</li>
+<li><p>   wildcard:	扩展通配符	src &#x3D; $(wildcard <em>.c .&#x2F;sub&#x2F;</em>.c)	:	wildcard把指定目录.&#x2F;和.&#x2F;sub&#x2F;下所有后缀是.c的文件全部展开</p>
+</li>
+<li><p>   notdir:		去除路径	dir &#x3D; $(notdir $(src))	:	notdir把展开的文件去掉路径信息</p>
+</li>
+<li><p>   strip:		去空格函数,包括开头,结尾的空格,多个空格,tab等不可显示的字符	</p>
+<ul>
+<li><pre><code>              STR =   hello  a  b c 
+</code></pre>
+</li>
+<li><pre><code>              STRIP_STR = $(strip $(STR))		:	STRIP_STR相当于hello a b c
+</code></pre>
+</li>
+</ul>
+</li>
+<li><p>   findstring:	查找字符串	$(findstring FIND,IN)	:	在字符串IN中查找“FIND”字符串,找到则返回字符串FIND,否则返回空</p>
+</li>
+<li><p>   filter:	过滤指定的字符串	$(filter PATTERN…,TEXT)	:	过滤TEXT中不符合PATTERN模式的单词</p>
+<ul>
+<li><pre><code>        FILE = a.c b.h c.s d.cpp   
+</code></pre>
+</li>
+<li><pre><code>        SRC = $(filter %.c, $(FILE))		:	SRC = a.c
+</code></pre>
+</li>
+</ul>
+</li>
+<li><p>   filter-out:	过滤掉符合PATTERN模式的单词</p>
+</li>
+<li><p>   sort:	单词排序</p>
+</li>
+<li><p>   word:	$(word N,TEXT)	:	从字符串TEXT中按照指定的数目N取单词</p>
+</li>
+<li><p>   wordlist:	$(wordlist N,M,TEXT)	:	从字符串TEXT中取N到M之间的字符串</p>
+</li>
+<li><p>   words:	统计字符串中单词数量</p>
+</li>
+<li><p>   firstword:	取字符串中首个单词</p>
+</li>
+<li><p>   dir:	$(dir Names..)	:	取路径中的目录</p>
+</li>
+<li><p>   notdir:	$(notdir Names..)	:	取路径中的文件名</p>
+</li>
+<li><p>   suffx:	$(suffx Names..)	:	取路径中的文件名后缀</p>
+</li>
+<li><p>   basename:	取文件名前缀</p>
+</li>
+<li><p>   addsuffx:	$(addsuffx SUFFIX,Names..)	:	加后缀</p>
+</li>
+<li><p>   addprefix:	加前缀</p>
+</li>
+<li><p>   join:	将字符串中单词依次连接</p>
+</li>
+<li><p>   foreach:	$(foreach VAR,LIST,TEXT)	:	foreach函数的工作过程是:把LIST中使用空格分割的单词依次取出并赋值给变量VAR,<br>                                           然后执行TEXT表达式。重复这个过程,直到遍历完LIST中的最后一个单词。函数的返回值是TEXT多次计算的结果。</p>
+</li>
+<li><p>   if:		</p>
+<ul>
+<li>$(if CONDITION,THEN-PART)</li>
+<li>   $(if CONDITION,THEN-PART[,ELSE-PART])	:	if 函数的第一个参数 CONDITION表示条件判断,展开后如果非空,则条件为真,执行 THEN-PART部分；否则,如果有ELSE-PART部分,则执行ELSE-PART部分</li>
+</ul>
+</li>
+<li><p>   origin:	顾名思义,origin函数的作用就是告诉你,你所关注的一个变量是从哪里来的。函数的使用格式为:</p>
+<ul>
+<li><pre><code>  $(origin &lt;variable&gt;)
+   如果变量没有定义,origin函数的返回值为:undefined,不同的返回值代表变量的类型不同。常见的返回值如下;
+</code></pre>
+</li>
+<li><pre><code>  default:变量是一个默认的定义,比如 CC 这个变量
+</code></pre>
+</li>
+<li><pre><code>  file:这个变量被定义在Makefile中
+</code></pre>
+</li>
+<li><pre><code>  command line:这个变量是被命令行定义的
+</code></pre>
+</li>
+<li><pre><code>  override:这个变量是被override指示符重新定义过的
+</code></pre>
+</li>
+<li><pre><code>  automatic:一个命令运行中的自动化变量
+</code></pre>
+</li>
+</ul>
+</li>
+<li><p>   shell:	$(shell pwd)	:	用于在Makefile中运行shell命令</p>
+</li>
+</ul>
+</li>
+<li><p>   自定义函数:需要用call函数间接调用,参数间用空格隔开 	$(call func,hello world)</p>
+<ul>
+<li>   define 函数名<br>   函数体</li>
+<li>   endef<br>   给函数传递的参数在函数中使用$(0),$(1)引用,分别表示第一个参数,第二个参数</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>   通配符:	和shell一样</p>
+</li>
+<li><p>   自动变量</p>
+<ul>
+<li>   $+<ul>
+<li>   @	:	目标</li>
+<li>   ^	:	目标所有依赖</li>
+<li>   &lt;	:	目标依赖列表中第一个依赖</li>
+<li>   ？	:	所有目标依赖中被修改过的文件</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>   $(MAKE)	:	make</p>
+</li>
+<li><p>   make -C	dir:	为make提供不同的目录,make首先切换到dir目录下,然后执行make,然后再切换回来</p>
+<ul>
+<li><pre><code>-f	mymakefile	:	将mymakefile视为Makefile
+</code></pre>
+</li>
+<li><pre><code>-d 	:	打印调试信息
+</code></pre>
+</li>
+<li><pre><code>-B		:	强制编译所有的目标文件和最终的执行文件
+</code></pre>
+</li>
+<li><pre><code>-p		:	查看所有预定义的变量的当前值
+</code></pre>
+</li>
+<li><pre><code>-j4	:	指定同时执行的命令数目为4,存在多个-j目标时,最后一个目标指定的jobs有效
+</code></pre>
+</li>
+</ul>
+</li>
+<li><p>   @cmd	:	不会打印正在执行的cmd,只会执行cmd并输出执行cmd后得到的结果</p>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/07/29/makefile-note/" data-id="clkno20jw0003y8pzcza8do15" data-title="makefile-note" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2023/07/29/gcc-note/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">前一篇</strong>
+      <div class="article-nav-title">
+        
+          gcc-note
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2023/07/29/inotify/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">inotify</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/07/29/gcc-note/">gcc-note</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/29/makefile-note/">makefile-note</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/29/inotify/">inotify</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/29/unix%E5%9F%9F%E5%8D%8F%E8%AE%AE/">unix域协议</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/29/raw_socket/">raw socket</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2023 Kazi Ball<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

@@ -76,6 +76,754 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-gcc-note" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/07/29/gcc-note/" class="article-date">
+  <time class="dt-published" datetime="2023-07-29T06:46:02.000Z" itemprop="datePublished">2023-07-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2023/07/29/gcc-note/">gcc-note</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/07/29/gcc-note/" data-id="clkno20jt0001y8pz4ker3v0j" data-title="gcc-note" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-makefile-note" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/07/29/makefile-note/" class="article-date">
+  <time class="dt-published" datetime="2023-07-29T06:45:49.000Z" itemprop="datePublished">2023-07-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2023/07/29/makefile-note/">makefile-note</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>makefile<br>-	文件名格式:Makefile makefile GNUmakefile<br>-	规则:<br>    -	由目标、目标依赖、命令三部分构成(一个规则中不一定具有所有的三个规则,目标依赖和命令都可以无)<br>            目标:目标依赖<br>                命令<br>            a.out:hello.c<br>                gcc -o a.out hello.c<br>    -	规则可以有多个目标<br>            %.o:%.c<br>                gcc -o %.o %.c<br>-	make目标依赖:<br>    -	make第一次编译项目会依次编译所有的源文件。修改程序后make会根据文件的时间戳判断文件是否有更新来决定是否对其进行编译。<br>    -	头文件依赖:<br>            一般不将头文件添加至规则的目标依赖列表。这样如果头文件改变,不会重新编译源文件。可以将头文件添加至依赖目标中,但是<br>            这样过于繁琐。可以使用gcc -MM自动生成头文件依赖关系。</p>
+<ul>
+<li><p>   命令:</p>
+<ul>
+<li>   make对于规则中每一个命令会开一个进程执行,每条命令执行完make会检测其返回码。命令返回成功,则make继续执行下一个命令；命令<br>   执行失败,make终止执行当前的规则,退出编译。</li>
+</ul>
+</li>
+<li><p>   变量:</p>
+<ul>
+<li>   定义变量:val &#x3D; test</li>
+<li>   引用变量:$(val)</li>
+<li>   变量赋值:<ul>
+<li>   条件赋值:?&#x3D;	(如果变量未定义,则直接赋值,否则什么也不作)</li>
+<li>   追加赋值:+&#x3D;	(OBJS &#x3D; hello.o  OBJS+&#x3D; module.o 相当于 OBJS &#x3D; hello.o module.o)</li>
+</ul>
+</li>
+<li>   立即变量::&#x3D;</li>
+<li>   延迟展开变量:&#x3D;</li>
+</ul>
+</li>
+<li><p>   变量替换:</p>
+<ul>
+<li><p>   使用指定字符串替换变量中的字符串</p>
+<ul>
+<li>   .PHONY: all<br>   SRC :&#x3D; main.c sub.c<br>   OBJ :&#x3D; $(SRC:.c&#x3D;.o)<br>   替换后结果为 OBJ :&#x3D; main.o sub.o</li>
+</ul>
+</li>
+<li><p>   模式匹配替换</p>
+<ul>
+<li><p>   使用匹配符%匹配变量,使用%保留变量中的指定字符串然后其他部分使用指定字符串代替<br>   SRC &#x3D; main.c sub.c<br>   OBJ &#x3D; $(SRC:%.c&#x3D;%.o)</p>
+<p>   test: 1.o 2.o 3.o<br>   %.o:%.c</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>   环境变量</p>
+<ul>
+<li>   系统环境变量<ul>
+<li>   $(SHELL)	&#x2F;bin&#x2F;sh</li>
+<li>   $(MAKE)		make</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>   export传递变量</p>
+<ul>
+<li>   在shell环境下使用export命令相当于将变量声明为系统环境变量,make解析Makefile时会自动引入系统环境变量</li>
+</ul>
+</li>
+<li><p>   Makefile递归执行</p>
+<ul>
+<li>   make -C subdir1	subdir2	subdir3<br>   相当于<br>   cd subdir1 &amp;&amp; $(MAKE)<br>   cd subdir2 &amp;&amp; $(MAKE)<br>   cd subdir3 &amp;&amp; $(MAKE)</li>
+</ul>
+</li>
+<li><p>   override:</p>
+<ul>
+<li><p>   如果不希望命令行指定的变量值替代在Makefile中的原来定义,可以用override对变量进行声明<br>   override web &#x3D; <a target="_blank" rel="noopener" href="http://www.baidu.com/">www.baidu.com</a><br>   all:<br>       @echo “web &#x3D; $(web)”<br><br>   使用make web&#x3D;<a target="_blank" rel="noopener" href="http://www.taobao.com将始终输出web/">www.taobao.com将始终输出web</a> &#x3D; <a target="_blank" rel="noopener" href="http://www.baidu.com/">www.baidu.com</a></p>
+</li>
+<li><p>   如果编译程序时,无论在命令行指定什么参数,编译器在编译时必须打开-w选项,那么Makefile中CFLAGS应该这样定义<br>   override CFLAGS +&#x3D; -w<br>   当执行make CFLAGS&#x3D;-g时,CFLAGS就变成了-g -w</p>
+</li>
+</ul>
+</li>
+<li><p>   条件判断:</p>
+<ul>
+<li><p>   ifeq ($(val1),$(val2))<br>   else<br>   endif<br>   用于判断两个变量是否相等<br>   ifneq和ifeq恰恰相反</p>
+<p>   ifdef mode<br>   else<br>   endif<br>   用于判断变量mode是否被定义<br>   ifndef和ifdef恰恰相反</p>
+</li>
+</ul>
+</li>
+<li><p>   函数:</p>
+<ul>
+<li><p>   内嵌函数:可直接调用</p>
+<ul>
+<li><p>   subst:		替换字符串	$(subst .c,.o,$dir)	:subst把$(dir)中名称转为xx.o</p>
+</li>
+<li><p>   patsubst:	替换通配符	$(patsubst %.c,%.o,$(dir))	:	patsubst把$(dir)中的变量符合后缀为.c的全部替换为.o</p>
+</li>
+<li><p>   wildcard:	扩展通配符	src &#x3D; $(wildcard <em>.c .&#x2F;sub&#x2F;</em>.c)	:	wildcard把指定目录.&#x2F;和.&#x2F;sub&#x2F;下所有后缀是.c的文件全部展开</p>
+</li>
+<li><p>   notdir:		去除路径	dir &#x3D; $(notdir $(src))	:	notdir把展开的文件去掉路径信息</p>
+</li>
+<li><p>   strip:		去空格函数,包括开头,结尾的空格,多个空格,tab等不可显示的字符	</p>
+<ul>
+<li><pre><code>              STR =   hello  a  b c 
+</code></pre>
+</li>
+<li><pre><code>              STRIP_STR = $(strip $(STR))		:	STRIP_STR相当于hello a b c
+</code></pre>
+</li>
+</ul>
+</li>
+<li><p>   findstring:	查找字符串	$(findstring FIND,IN)	:	在字符串IN中查找“FIND”字符串,找到则返回字符串FIND,否则返回空</p>
+</li>
+<li><p>   filter:	过滤指定的字符串	$(filter PATTERN…,TEXT)	:	过滤TEXT中不符合PATTERN模式的单词</p>
+<ul>
+<li><pre><code>        FILE = a.c b.h c.s d.cpp   
+</code></pre>
+</li>
+<li><pre><code>        SRC = $(filter %.c, $(FILE))		:	SRC = a.c
+</code></pre>
+</li>
+</ul>
+</li>
+<li><p>   filter-out:	过滤掉符合PATTERN模式的单词</p>
+</li>
+<li><p>   sort:	单词排序</p>
+</li>
+<li><p>   word:	$(word N,TEXT)	:	从字符串TEXT中按照指定的数目N取单词</p>
+</li>
+<li><p>   wordlist:	$(wordlist N,M,TEXT)	:	从字符串TEXT中取N到M之间的字符串</p>
+</li>
+<li><p>   words:	统计字符串中单词数量</p>
+</li>
+<li><p>   firstword:	取字符串中首个单词</p>
+</li>
+<li><p>   dir:	$(dir Names..)	:	取路径中的目录</p>
+</li>
+<li><p>   notdir:	$(notdir Names..)	:	取路径中的文件名</p>
+</li>
+<li><p>   suffx:	$(suffx Names..)	:	取路径中的文件名后缀</p>
+</li>
+<li><p>   basename:	取文件名前缀</p>
+</li>
+<li><p>   addsuffx:	$(addsuffx SUFFIX,Names..)	:	加后缀</p>
+</li>
+<li><p>   addprefix:	加前缀</p>
+</li>
+<li><p>   join:	将字符串中单词依次连接</p>
+</li>
+<li><p>   foreach:	$(foreach VAR,LIST,TEXT)	:	foreach函数的工作过程是:把LIST中使用空格分割的单词依次取出并赋值给变量VAR,<br>                                           然后执行TEXT表达式。重复这个过程,直到遍历完LIST中的最后一个单词。函数的返回值是TEXT多次计算的结果。</p>
+</li>
+<li><p>   if:		</p>
+<ul>
+<li>$(if CONDITION,THEN-PART)</li>
+<li>   $(if CONDITION,THEN-PART[,ELSE-PART])	:	if 函数的第一个参数 CONDITION表示条件判断,展开后如果非空,则条件为真,执行 THEN-PART部分；否则,如果有ELSE-PART部分,则执行ELSE-PART部分</li>
+</ul>
+</li>
+<li><p>   origin:	顾名思义,origin函数的作用就是告诉你,你所关注的一个变量是从哪里来的。函数的使用格式为:</p>
+<ul>
+<li><pre><code>  $(origin &lt;variable&gt;)
+   如果变量没有定义,origin函数的返回值为:undefined,不同的返回值代表变量的类型不同。常见的返回值如下;
+</code></pre>
+</li>
+<li><pre><code>  default:变量是一个默认的定义,比如 CC 这个变量
+</code></pre>
+</li>
+<li><pre><code>  file:这个变量被定义在Makefile中
+</code></pre>
+</li>
+<li><pre><code>  command line:这个变量是被命令行定义的
+</code></pre>
+</li>
+<li><pre><code>  override:这个变量是被override指示符重新定义过的
+</code></pre>
+</li>
+<li><pre><code>  automatic:一个命令运行中的自动化变量
+</code></pre>
+</li>
+</ul>
+</li>
+<li><p>   shell:	$(shell pwd)	:	用于在Makefile中运行shell命令</p>
+</li>
+</ul>
+</li>
+<li><p>   自定义函数:需要用call函数间接调用,参数间用空格隔开 	$(call func,hello world)</p>
+<ul>
+<li>   define 函数名<br>   函数体</li>
+<li>   endef<br>   给函数传递的参数在函数中使用$(0),$(1)引用,分别表示第一个参数,第二个参数</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>   通配符:	和shell一样</p>
+</li>
+<li><p>   自动变量</p>
+<ul>
+<li>   $+<ul>
+<li>   @	:	目标</li>
+<li>   ^	:	目标所有依赖</li>
+<li>   &lt;	:	目标依赖列表中第一个依赖</li>
+<li>   ？	:	所有目标依赖中被修改过的文件</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>   $(MAKE)	:	make</p>
+</li>
+<li><p>   make -C	dir:	为make提供不同的目录,make首先切换到dir目录下,然后执行make,然后再切换回来</p>
+<ul>
+<li><pre><code>-f	mymakefile	:	将mymakefile视为Makefile
+</code></pre>
+</li>
+<li><pre><code>-d 	:	打印调试信息
+</code></pre>
+</li>
+<li><pre><code>-B		:	强制编译所有的目标文件和最终的执行文件
+</code></pre>
+</li>
+<li><pre><code>-p		:	查看所有预定义的变量的当前值
+</code></pre>
+</li>
+<li><pre><code>-j4	:	指定同时执行的命令数目为4,存在多个-j目标时,最后一个目标指定的jobs有效
+</code></pre>
+</li>
+</ul>
+</li>
+<li><p>   @cmd	:	不会打印正在执行的cmd,只会执行cmd并输出执行cmd后得到的结果</p>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/07/29/makefile-note/" data-id="clkno20jw0003y8pzcza8do15" data-title="makefile-note" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-inotify" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/07/29/inotify/" class="article-date">
+  <time class="dt-published" datetime="2023-07-29T06:45:37.000Z" itemprop="datePublished">2023-07-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2023/07/29/inotify/">inotify</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>inotify:    inotify是一种文件系统的变化通知机制,如文件增加、删除事件可以立刻让用户态得知.由著名的桌面搜索引擎项目beagle引入,并在Gamin等项目中被应用.<br>Inotify 是为替代 dnotify 而设计的,它克服了 dnotify 的缺陷,提供了更好用的,简洁而强大的文件变化通知机制：</p>
+<ol>
+<li><p>Inotify 不需要对被监视的目标打开文件描述符,而且如果被监视目标在可移动介质上,那么在 umount 该介质上的文件系统后,被监视目标对应的 watch 将被自动删除,并且会产生一个 umount 事件。</p>
+</li>
+<li><p>Inotify 既可以监视文件,也可以监视目录。</p>
+</li>
+<li><p>Inotify 使用系统调用而非 SIGIO 来通知文件系统事件。</p>
+</li>
+<li><p>Inotify 使用文件描述符作为接口,因而可以使用通常的文件 I&#x2F;O 操作select 和 poll 来监视文件系统的变化。</p>
+</li>
+</ol>
+<ul>
+<li><p>Inotify 可以监视的文件系统事件包括：</p>
+<ul>
+<li><p>IN_ACCESS,即文件被访问</p>
+</li>
+<li><p>IN_MODIFY,文件被 write</p>
+</li>
+<li><p>IN_ATTRIB,文件属性被修改,如 chmod、chown、touch 等</p>
+</li>
+<li><p>IN_CLOSE_WRITE,可写文件被 close</p>
+</li>
+<li><p>IN_CLOSE_NOWRITE,不可写文件被 close</p>
+</li>
+<li><p>IN_OPEN,文件被 open</p>
+</li>
+<li><p>IN_MOVED_FROM,文件被移走,如 mv</p>
+</li>
+<li><p>IN_MOVED_TO,文件被移来,如 mv、cp</p>
+</li>
+<li><p>IN_CREATE,创建新文件</p>
+</li>
+<li><p>IN_DELETE,文件被删除,如 rm</p>
+</li>
+<li><p>IN_DELETE_SELF,自删除,即一个可执行文件在执行时删除自己</p>
+</li>
+<li><p>IN_MOVE_SELF,自移动,即一个可执行文件在执行时移动自己</p>
+</li>
+<li><p>IN_UNMOUNT,宿主文件系统被 umount</p>
+</li>
+<li><p>IN_CLOSE,文件被关闭,等同于(IN_CLOSE_WRITE | IN_CLOSE_NOWRITE)</p>
+</li>
+<li><p>IN_MOVE,文件被移动,等同于(IN_MOVED_FROM | IN_MOVED_TO)</p>
+</li>
+</ul>
+</li>
+<li><p>注：上面所说的文件也包括目录</p>
+</li>
+<li><p>头文件: #include&lt;sys&#x2F;inotify.h&gt;</p>
+</li>
+<li><p>用户接口:</p>
+<ul>
+<li>int fd &#x3D; inotify_init();    创建inotify实例<ul>
+<li><p>每一个 inotify 实例对应一个独立的排序的队列。</p>
+</li>
+<li><p>文件系统的变化事件被称做 watches 的一个对象管理,每一个 watch 是一个二元组（目标,事件掩码）,目标可以是文件或目录,事件掩码表示应用希望关注的 inotify 事件,每一个位对应一个 inotify 事件。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>  Watch 对象通过 watch描述符引用,watches 通过文件或目录的路径名来添加。目录 watches 将返回在该目录下的所有文件上面发生的事件。</p>
+<ul>
+<li><p>int wd &#x3D; inotify_add_watch(fd, path, mask);</p>
+<ul>
+<li>参数介绍:<ul>
+<li>fd: inotify_init()返回的文件描述符</li>
+<li>path:   被监视的目标的路径名</li>
+<li>mask:   事件掩码,在头文件linux&#x2F;inotify.h中定义了每一位代表的事件.可以使用同样的方式修改事件掩码,即改变希望被通知的inotify事件.</li>
+<li>wd:     watch描述符</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>int ret &#x3D; inotify_rm_watch(fd, wd);</p>
+<ul>
+<li>参数介绍:<ul>
+<li>fd: inotify_init()返回的文件描述符</li>
+<li>wd: inotify_add_watch()返回的watch描述符</li>
+<li>ret:    函数返回值</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>文件事件:</p>
+  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">struct inotify_event &#123;</span><br><span class="line"></span><br><span class="line">__s32 wd; /* watch descriptor */</span><br><span class="line"></span><br><span class="line">__u32 mask; /* watch mask */</span><br><span class="line"></span><br><span class="line">__u32 cookie; /* cookie to synchronize two events */</span><br><span class="line"></span><br><span class="line">__u32 len; /* length (including nulls) of name */</span><br><span class="line"></span><br><span class="line">char name[0]; /* stub for possible name */</span><br><span class="line"></span><br><span class="line">&#125;;  </span><br></pre></td></tr></table></figure></li>
+<li><p>size_t len &#x3D; read(fd, buf, BUF_LEN);</p>
+<ul>
+<li>参数介绍:<ul>
+<li>buf:    inotify_event结构的数组指针</li>
+<li>BUF_LEN:    指定要读取的总长度</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>可以在函数 inotify_init() 返回的文件描述符 fd 上使用 select() 或poll(), 也可以在 fd 上使用 ioctl 命令 FIONREAD 来得到当前队列的长度。</p>
+</li>
+<li><p>close(fd)将删除所有添加到 fd 中的 watch 并做必要的清理</p>
+</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/07/29/inotify/" data-id="clkno20jq0000y8pz2x3b72rj" data-title="inotify" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-unix域协议" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/07/29/unix%E5%9F%9F%E5%8D%8F%E8%AE%AE/" class="article-date">
+  <time class="dt-published" datetime="2023-07-29T06:45:24.000Z" itemprop="datePublished">2023-07-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2023/07/29/unix%E5%9F%9F%E5%8D%8F%E8%AE%AE/">unix域协议</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <ul>
+<li>概念:    Unix域协议并不是一个实际的协议族,它只是在同一台主机上进行客户-服务器通信时,使用与在不同主机上的客户和服务器间通信<br>   时相同的API(套接口或XTI)的一种方法。<br>   当客户和服务器在同一台主机上时,Unix域协议是IPC通信方式的一种替代品。</li>
+</ul>
+<pre><code>-		Unix域协议提供了两种类型的套接口:    字节流套接口和数据报套接口
+</code></pre>
+<ul>
+<li><p>   优点:    </p>
+<ol>
+<li>比起TCP协议通常要更快;</li>
+<li>支持在同一台主机上的不同进程之间传递描述符;</li>
+<li>支持传递客户端凭证。</li>
+</ol>
+</li>
+<li><pre><code>Unix域socket地址结构:    
+</code></pre>
+<ul>
+<li>   头文件:    &lt;sys&#x2F;un.h&gt;  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">   struct sockaddr_un</span><br><span class="line">&#123;</span><br><span class="line">		sa_family_t sun_family;	</span><br><span class="line">		char sun_path[108];	/*pathname */</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>使用方式:    </p>
+<ul>
+<li><p>   说明:    和tcp&#x2F;udp套接字的方式类似,只需要将协议族替换为AF_LOCAL或者AF_UNIX,然后将地址替换为sockaddr_un即可。</p>
+<ul>
+<li><pre><code>  要注意的是bind绑定的不是ip地址,而是用一个文件路径来作为地址(绑定的路径应使用绝对路径,避免相对路径的解析依赖	调用者的当前路径)POSIX声称使用相对路径绑定到uds将导致不可预计的结果
+</code></pre>
+</li>
+</ul>
+</li>
+<li><p>   connect:    </p>
+<ol>
+<li>调用connect连接一个uds涉及的权限检查等同于调用open以只读模式访问对应路径。</li>
+<li>unix域字节流套接字与TCP套接字类似,它们都提供无记录边界的字节流接口。</li>
+<li>如果对一个uds进行connect时发现监听套接字的队列已满,调用会立即返回一个ECONNECTREFUSED错误;<br> 而TCP监听套接字在队列满时则会忽略新到达的SYNC,进而连接发起端发起端进行重试。</li>
+<li>unix域数据报套接字与UDP套接字类似,它们都提供保留记录边界的不可靠的数据报服务。</li>
+<li>在未绑定的uds上发送数据不会自动为其绑定一个路径,这一点不同于UDP套接字:    在一个未绑定的UDP套接字上发送数据会为其<br> 绑定一个临时端口。这意味着除非数据报发送端已经绑定到一个路径,否则数据报接收端无法发回应答数据报。<br> 类似的,对于uds的connect调用不会为其绑定一个路径,这一点不同于TCP&#x2F;UDP</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>   应用场景:    </p>
+<ul>
+<li>   本机通讯:    当我们需要在本机通信时,可以使用uds来代替本地回环接口。uds相比TCP&#x2F;UDP套接字性能会更好,因为它不需要经过网络协议栈,省去了各种解析和应答等步骤,而是直接在内核拷贝传递数据。比如最近很热的service mesh,业务进程和sidecar就可以通过uds来通信。</li>
+<li>   传递描述符:    unix系统提供了用于从一个进程向其他任意进程传递描述符的方式,而这两个进程不需要有任何亲缘关系。这种技术要求在两个进程之间创建一个uds,然后使用sendmsg通过这个uds发送特殊结构的消息。这个特殊的消息会由内核处理,把打开的描述符从发送进程传递到接收进程。<ul>
+<li>   步骤:    <ol>
+<li>创建一个字节流或数据报的uds。这可以通过调用socketpair然后父子进程之间的连接;也可以使用套接字API。通常建议使用字节流套接字而不是数据报套接字,因为使用数据报套接字并没有什么好处,反而还存在数据报被丢弃的可能。</li>
+<li>发送端打开描述符。uds可以传递各种类型的描述符,而不是仅包括文件描述符。</li>
+<li>发送端进程创建一个msghdr的结构,其中含有待传递的描述符,然后调用sendmsg将其发送出去。发送一个描述符会使其引用计数加一。</li>
+<li>接收端进程调用recvmsg在创建的uds上接收描述符。这个过程会在接收进程创建一个新的描述符,然后将其指向和发送进程发送的描述符指向的同一个内核文件选项。所以接收端收到的描述符不同于发送端发送端描述符是很正常的</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li></li>
+</ul>
+<pre><code>    /*
+        * [XSI] Message header for recvmsg and sendmsg calls.
+        * Used value-result for recvmsg, value only for sendmsg.
+        */
+    struct msghdr &#123;
+        void		*msg_name;	/* [XSI] optional address */
+        socklen_t	msg_namelen;	/* [XSI] size of address */
+        struct		iovec *msg_iov;	/* [XSI] scatter/gather array */
+        int		msg_iovlen;	/* [XSI] # elements in msg_iov */
+        void		*msg_control;	/* [XSI] ancillary data, see below */
+        socklen_t	msg_controllen;	/* [XSI] ancillary data buffer len */
+        int		msg_flags;	/* [XSI] flags on received message */
+    &#125;;
+            
+    验证发送者的身份:    	传递用户凭证。
+
+-   例子:    
+        int sockfd;
+        struct sockaddr_un srv_addr,addr2;
+        //先调用socket创建套接字
+        sockfd = socket(AF_LOCAL, SOCK_STREAM, 0);
+        //对已存在的路径进行bind会导致失败,所以需要预先unlink删除文件
+        unlink(pathname);
+        //初始化地址结构
+        bzero(&amp;srv_addr,sizeof(srv_addr));
+        //设置协议族为AF_LOCAL或AF_UNIX
+        srv_addr.sun_family = AF_LOCAL;
+        //设置地址的文件路径
+        strcpy(srv_addr.sun_path,pathname);
+        //绑定文件路径
+        bind(sockfd, (struct sockaddr*)&amp;srv_addr,sizeof(srv_addr));
+        //开始监听
+        listen(sockfd, 1);
+        
+        while(1)
+        &#123;
+            connfd = accept(sockfd, (struct sockaddr*)&amp;addr2,sizeof(addr2));
+            
+        &#125;
+        
+        客户端connect:
+            struct sockaddr_un cliaddr;
+            cliaddr.sun_family = AF_LOCAL;
+            strcpy(cliaddr.sun_path, pathname);
+            connect(connnfd, (struct sockaddr*)&amp;cliaddr,sizeof(cliaddr));
+        
+socketpair:	socketpair函数可以创建两个连接起来的unix域套接字
+    头文件:    	&lt;sys/socket.h&gt;
+    函数原型:    	int socketpair(int family, int type, int protocol, int sockfd[2]);
+    使用方法:    	family:AF_LOCAL
+                protocol:0
+                type:SOCK_STREAM or SOCK_DGRAM
+                sockfd[2]:新创建的两个套接字描述符作为sockfd[0]和sockfd[1]返回
+</code></pre>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/07/29/unix%E5%9F%9F%E5%8D%8F%E8%AE%AE/" data-id="clkno20jv0002y8pz64tqhuzf" data-title="unix域协议" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-raw_socket" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/07/29/raw_socket/" class="article-date">
+  <time class="dt-published" datetime="2023-07-29T06:45:24.000Z" itemprop="datePublished">2023-07-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2023/07/29/raw_socket/">raw socket</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="头文件"><a href="#头文件" class="headerlink" title="头文件:"></a>头文件:</h3><pre><code>- #include&lt;sys/types.h&gt;
+- #include&lt;sys/socket.h&gt;
+</code></pre>
+<h3 id="函数原型-int-socket-int-domain-int-type-int-protocol"><a href="#函数原型-int-socket-int-domain-int-type-int-protocol" class="headerlink" title="函数原型:   int socket(int domain, int type, int protocol);"></a>函数原型:   int socket(int domain, int type, int protocol);</h3><img src="./socket.jpg" alt="socket层次">
+
+<h4 id="参数说明"><a href="#参数说明" class="headerlink" title="参数说明"></a>参数说明</h4><ul>
+<li>domain:   决定第二层通信域</li>
+<li>type:     决定第三层通信模式</li>
+<li>protocol: 决定第四层通信协议</li>
+</ul>
+<h4 id="3种原始套接字创建方式及其接收发送数据方式"><a href="#3种原始套接字创建方式及其接收发送数据方式" class="headerlink" title="3种原始套接字创建方式及其接收发送数据方式"></a>3种原始套接字创建方式及其接收发送数据方式</h4><ol>
+<li>socket(AF_INET, SOCK_RAW, IPPROTO_XXXX)<ul>
+<li>接收<ul>
+<li>接收的数据是包含IP头的协议类型为IPPROTO_XXX且发往本机的IP数据包</li>
+<li>对于protocol为0(IPPROTO_IP)的raw socket用于接收任何的IP数据包其中的校验和和协议分析由程序自己完成</li>
+</ul>
+</li>
+<li>发送<ul>
+<li>默认情况下    发送的数据是不包含IP头的IP数据包负载部分(如TCP或UDP包)    网络层会自动添加IP头</li>
+<li>如果使用<a href="#setsockopt">setsockopt函数</a>设置了IP_HDRINCL选项后    写入的数据就必须包含IP头    即IP头在用户层由使用者自己构建</li>
+<li>如果protocol是IPPROTO_RAW(255)    这时候    这个socket只能用来发送IP包    而不能接收任何的数据发送的数据需要自己填充IP包头    并且自己计算校验和</li>
+</ul>
+</li>
+<li>IPPROTO_XXX 是&#x2F;etc&#x2F;protocols文件中描述的protocol    指明要接收的包含在IP数据包中的协议包</li>
+</ul>
+</li>
+<li>socket(PF_PACKET, SOCK_RAW, htons(ETH_P_XXX))<ul>
+<li>接收<ul>
+<li>发往本地mac的数据帧</li>
+<li>从本机发送出去的数据帧(第3个参数需要设置为 ETH_P_ALL)</li>
+<li>非发往本地mac的数据帧(网卡需要设置为 promisc 混杂模式)</li>
+</ul>
+</li>
+<li>发送<ul>
+<li>需要自己组织整个以太网数据帧    所有相关的地址使用<a href="#sockaddr_ll">struct sockaddr_ll</a></li>
+<li>相关代码见<a href="#code1">PF_PACKET发送数据</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>socket(AF_INET, SOCK_PACKET, htons(ETH_P_XXX))<ul>
+<li>此方法已过时</li>
+</ul>
+</li>
+</ol>
+<h4 id="note"><a href="#note" class="headerlink" title="note"></a>note</h4><ul>
+<li>AF_INET和AF_PACKET区别<ul>
+<li>AF_INET无法获取链路层数据    即无法获取以太网头部    </li>
+<li>AF_PACKET面向链路层    可获取链路层数据</li>
+</ul>
+</li>
+<li><h2 id="相关函数和结构体说明-ioctl-setsockopt"><a href="#相关函数和结构体说明-ioctl-setsockopt" class="headerlink" title="相关函数和结构体说明- ioctl- setsockopt"></a>相关函数和结构体说明<br>- ioctl<br>- setsockopt</h2></li>
+</ul>
+<h3 id="以太网数据帧格式"><a href="#以太网数据帧格式" class="headerlink" title="以太网数据帧格式"></a>以太网数据帧格式</h3><img src="以太网帧格式.png" alt="ethernet">
+
+<ul>
+<li>前同步码: 用来使接收端的适配器在接收 MAC 帧时能够迅速调整时钟频率,使它和发送端的频率相同.前同步码为7个字节,1和0交替</li>
+<li>帧开始定界符: 帧的起始符.为1个字节前6位1和0交替,最后的两个连续的1表示告诉接收端适配器：“帧信息要来了,准备接收”.</li>
+<li>目的地址: 接收帧的网络适配器的物理地址(MAC地址)为6个字节(48比特)作用是当网卡接收到一个数据帧时,首先会检查该帧的目的地址是否与当前适配器的物理地址相同,如果相同就会进一步处理；如果不同则直接丢弃</li>
+<li>源地址: 发送帧的网络适配器的物理地址(MAC地址)为6个字节(48比特)</li>
+<li>类型: 上层协议的类型由于上层协议众多,所以在处理数据的时候必须设置该字段,标识数据交付哪个协议处理例如:字段为 0x0800 时,表示将数据交付给 IP 协议</li>
+<li>数据: 也称为效载荷.表示交付给上层的数据以太网帧数据长度最小为 46 字节.最大为 1500 字节如果不足 46 字节时,会填充到最小长度最大值也叫最大传输单元(MTU).在 Linux 中,使用 ifconfig 命令可以查看该值,通常为 1500</li>
+<li>帧检验序列 FCS: 检测该帧是否出现差错,占 4 个字节(32 比特)发送方计算帧的循环冗余码校验(CRC)值,把这个值写到帧里接收方计算机重新计算 CRC,与 FCS 字段的值进行比较如果两个值不相同则表示传输过程中发生了数据丢失或改变.这时就需要重新传输这一帧</li>
+</ul>
+<h3 id="SOCK-RAW-接收-数据包的原理"><a href="#SOCK-RAW-接收-数据包的原理" class="headerlink" title="SOCK_RAW 接收 数据包的原理"></a>SOCK_RAW 接收 数据包的原理</h3><ol>
+<li><p>网卡对该数据帧进行硬过滤(数据链路层过滤)———— 二层<br>首先进行数据链路层校验和处理,如果校验和出错,直接仍掉；然后根据网卡的模式不同会有不同的动作：如果设置了promisc混杂模式的话.则不做任何过滤直接交给下一层输入,否则非本机mac或者广播mac会被直接丢弃</p>
+</li>
+<li><p>向用户层递交数据链路层数据帧 ———— SOCK_RAW捕获数据链路层数据帧<br>在进入网络层之前,系统会检查系统中是否有通过socket(AF_PACKET, SOCK_RAW, …)创建的套接字；如果有并且与指定的协议相符的话.系统就给每个这样的socket接收缓冲区发送一个数据帧拷贝然后进入网络层</p>
+</li>
+<li><p>进入网络层(IP层过滤)———— 三层<br>IP层会对该数据包进行软过滤————就是检查校验或者丢弃非本机IP或者广播IP的数据包等</p>
+</li>
+<li><p>向用户层递交网络层数据包 ———— SOCK_RAW捕获网络层IP数据包<br>在进入运输层(如TCP、UDP例程)之前,系统会检查系统中是否有通过socket(AF_INET, SOCK_RAW, …)创建的套接字；如果有的话并且协议相符.系统就给每个这样的socket接收缓冲区发送一个数据包拷贝(不管在任何情况下,永远都包含IP数据包头)然后进入运输层</p>
+</li>
+<li><p>进入运输层(如TCP、UDP等例程)———— 四层<br>这一步由系统内核来处理运输层的协议,用户层无法干涉.处理完之后,如果合法将向用户层递交数据,进而进入用户层处理</p>
+</li>
+<li><p>进入用户层(如HTTP、FTP等)<br>这一层在用户态,由用户应用程序来完成</p>
+</li>
+</ol>
+<h3 id="注："><a href="#注：" class="headerlink" title="注："></a>注：</h3><ol>
+<li><p>如果校验和出错的话,内核会直接丢弃该数据包的；而不会拷贝给sock_raw套接字,因为校验和都出错了,数据肯定有问题的.其包括所有信息都没有意义了.所以sock_raw不需要关心数据链路层和IP层的校验和问题</p>
+</li>
+<li><p>在没有递交给其他协议处理器(内核协议处理器)之前,先递交给所有的 Raw Socket.换句话说,就是 Raw Socket 优先处理</p>
+</li>
+</ol>
+<h3 id="PF-PACKET发送数据"><a href="#PF-PACKET发送数据" class="headerlink" title="PF_PACKET发送数据"></a><dev id="code1">PF_PACKET发送数据</dev></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">int sockfd = socket(PF_PACKET, SOCK_RAW, htons(ETH_P_ALL));</span><br><span class="line">struct sockaddr_ll sll;</span><br><span class="line">memset( &amp;sll, 0, sizeof(sll) );</span><br><span class="line">sll.sll_family = AF_PACKET;</span><br><span class="line">struct ifreq ifstruct;</span><br><span class="line">strcpy(ifstruct.ifr_name, &quot;eth0&quot;);</span><br><span class="line">ioctl(sockfd, SIOCGIFINDEX, &amp;ifstruct);</span><br><span class="line">sll.sll_ifindex = ifstruct.ifr_ifindex;</span><br><span class="line">sll.sll_protocol = htons(ETH_P_ALL);</span><br><span class="line">if(bind(fd, (struct sockaddr *) &amp;sll, sizeof(sll)) == -1 )</span><br><span class="line">    perror(&quot;bind()&quot;);</span><br><span class="line"></span><br><span class="line">int set_promisc(char *interface, int fd) &#123;</span><br><span class="line">    struct ifreq ifr;</span><br><span class="line">    strcpy(ifr.ifr_name, interface);</span><br><span class="line">    if(ioctl(fd, SIOCGIFFLAGS, &amp;ifr) == -1) &#123;</span><br><span class="line">        perror(&quot;iotcl()&quot;);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line">    ifr.ifr_flags |= IFF_PROMISC;</span><br><span class="line">    if(ioctl(fd, SIOCSIFFLAGS, &amp;ifr) == -1) &#123;</span><br><span class="line">        perror(&quot;iotcl()&quot;);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int unset_promisc(char *interface, int fd) &#123;</span><br><span class="line">    struct ifreq ifr;</span><br><span class="line">    strcpy(ifr.ifr_name, interface);</span><br><span class="line">    if(ioctl(fd, SIOCGIFFLAGS, &amp;ifr) == -1) &#123;</span><br><span class="line">        perror(&quot;iotcl()&quot;);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line">    ifr.ifr_flags &amp;= ~IFF_PROMISC;</span><br><span class="line">    if(ioctl(fd, SIOCSIFFLAGS, &amp;ifr) == -1) &#123;</span><br><span class="line">        perror(&quot;iotcl()&quot;);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="sockaddr-ll结构体"><a href="#sockaddr-ll结构体" class="headerlink" title="sockaddr_ll结构体"></a><dev id="sockaddr_ll">sockaddr_ll结构体</dev></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">struct sockaddr_ll &#123;  </span><br><span class="line">        unsigned short  sll_family;  </span><br><span class="line">        __be16          sll_protocol;  </span><br><span class="line">        int             sll_ifindex;  </span><br><span class="line">        unsigned short  sll_hatype;  </span><br><span class="line">        unsigned char   sll_pkttype;  </span><br><span class="line">        unsigned char   sll_halen;  </span><br><span class="line">        unsigned char   sll_addr[8];  </span><br><span class="line">&#125;;  </span><br></pre></td></tr></table></figure>
+<p><em>参数说明</em></p>
+<ul>
+<li>sll_family:   地址族</li>
+<li>sll_protocol: 上层协议类型,可查找&lt;linux&#x2F;if_ether.h&gt;</li>
+<li>sll_ifindex:  interface索引,0匹配所有网卡源文件&lt;linxu&#x2F;netdevice.h&gt;</li>
+<li>sll_hatype:   ARP硬件地址类型可选,源文件&lt;net&#x2F;if_arp.h&gt;</li>
+<li>sll_pkttype:  包含分组类型<ul>
+<li>有效的分组类型：<ul>
+<li>目标地址是本地主机的分组用的 PACKET_HOST    </li>
+<li>物理层广播分组用的 PACKET_BROADCAST     </li>
+<li>发送到一个物理层多路广播地址的分组用的 PACKET_MULTICAST    </li>
+<li>在混杂(promiscuous)模式下的设备驱动器发向其他主机的分组用的PACKET_OTHERHOST    </li>
+<li>本源于本地主机的分组被环回到分组套接口用的 PACKET_OUTGOING</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>sll_addr和sll_halen:  包括物理层(例如IEEE802.3)地址和地址长度</li>
+</ul>
+<h4 id="note-1"><a href="#note-1" class="headerlink" title="note"></a><em>note</em></h4><p>当发送数据包时，指定 sll_family, sll_protocol，选择绑定(sll_addr, sll_halen) 或sll_ifindex 就足够了。其它字段设置为0； sll_hatype和 sll_pkttype是在接收数据包时使用的； 如果要bind, 只需要使用 sll_protocol和 sll_ifindex；</p>
+<ul>
+<li>获取接口的物理地址<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">struct ifreq ifr;</span><br><span class="line"></span><br><span class="line">strcpy(ifr.ifr_name, &quot;eth0&quot;);</span><br><span class="line">ioctl(sockfd, SIOCGIFHWADDR, &amp;ifr);</span><br></pre></td></tr></table></figure></li>
+<li>获取网卡接口的序号<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">struct  sockaddr_ll  sll;</span><br><span class="line">struct ifreq ifr;</span><br><span class="line"></span><br><span class="line">strcpy(ifr.ifr_name, &quot;eth0&quot;);</span><br><span class="line">ioctl(sockfd, SIOCGIFINDEX, &amp;ifr);</span><br><span class="line">sll.sll_ifindex = ifr.ifr_ifindex;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="ioctl函数使用说明"><a href="#ioctl函数使用说明" class="headerlink" title="ioctl函数使用说明"></a><dev id="ioctl">ioctl函数使用说明</dev></h3><p>作为那些不适合归入其他精细定义类别的特性的系统接口(即特殊的接口),POSIX一直致力摆脱处于标准化过程中的特定功能的ioctl接口,<br>如使用新的函数sockatmark函数取代SIOCATMARK,但是与网络相关并且依赖于实现的特性保留的ioctl请求为数依然不少,主要用于<strong><em>获取接口信息、访问路由表、访问ARP高速缓存</em></strong>等等。</p>
+<h4 id="头文件-include"><a href="#头文件-include" class="headerlink" title="头文件 #include&lt;sys&#x2F;ioctl.h&gt;"></a>头文件 #include&lt;sys&#x2F;ioctl.h&gt;</h4><h4 id="函数原型-int-ioctl-int-fd-unsigned-long-request-…"><a href="#函数原型-int-ioctl-int-fd-unsigned-long-request-…" class="headerlink" title="函数原型   int ioctl(int fd, unsigned long request, …)"></a>函数原型   int ioctl(int fd, unsigned long request, …)</h4><ul>
+<li>参数<ul>
+<li>fd: 文件描述符</li>
+<li>request: 请求的类型<ul>
+<li>相关的部分类型:    <ul>
+<li>SIOCG开头:  表示获取信息</li>
+<li>SIOCS开头:  表示设置参数<br>- SIOCGHWADDR	:	获取硬件地址</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>…:    可变参数arg</li>
+</ul>
+</li>
+<li>返回值<ul>
+<li>成功    0</li>
+<li>失败    -1并设置全局变量errorno</li>
+</ul>
+</li>
+</ul>
+<h4 id="操作请求"><a href="#操作请求" class="headerlink" title="操作请求:"></a>操作请求:</h4><ul>
+<li><h2 id="接口相关-包括接口的索引、名字、标志、ip地址、物理地址、网卡映射、MTU等。这些信息定义在struct-ifreq结构体中-头文件-结构体原型-struct-ifreq-define-IFHWADDRLEN6-union-charifrn-name-IFNAMSIZ-if-name-e-g-“en0”-ifr-ifrn-union-structsockaddr-ifru-addr-structsockaddr-ifru-dstaddr-structsockaddr-ifru-broadaddr-structsockaddr-ifru-netmask-struct-sockaddr-ifru-hwaddr-shortifru-flags-intifru-ivalue-intifru-mtu-struct-ifmap-ifru-map-charifru-slave-IFNAMSIZ-Just-fits-the-size-charifru-newname-IFNAMSIZ-void-ifru-data-structif-settings-ifru-settings-ifr-ifru-SO-PASSCRED-允许或禁止SCM-CREDENTIALS-控制消息的接收-SO-TIMESTAMP-打开或关闭数据报中的时间戳接收-SO-RCVLOWAT-设置接收数据前的缓冲区内的最小字节数-SO-RCVTIMEO-设置接收超时时间-SO-SNDTIMEO-设置发送超时时间-SO-BINDTODEVICE-将套接字绑定到一个特定的设备上-SO-ATTACH-FILTER和SO-DETACH-FILTER"><a href="#接口相关-包括接口的索引、名字、标志、ip地址、物理地址、网卡映射、MTU等。这些信息定义在struct-ifreq结构体中-头文件-结构体原型-struct-ifreq-define-IFHWADDRLEN6-union-charifrn-name-IFNAMSIZ-if-name-e-g-“en0”-ifr-ifrn-union-structsockaddr-ifru-addr-structsockaddr-ifru-dstaddr-structsockaddr-ifru-broadaddr-structsockaddr-ifru-netmask-struct-sockaddr-ifru-hwaddr-shortifru-flags-intifru-ivalue-intifru-mtu-struct-ifmap-ifru-map-charifru-slave-IFNAMSIZ-Just-fits-the-size-charifru-newname-IFNAMSIZ-void-ifru-data-structif-settings-ifru-settings-ifr-ifru-SO-PASSCRED-允许或禁止SCM-CREDENTIALS-控制消息的接收-SO-TIMESTAMP-打开或关闭数据报中的时间戳接收-SO-RCVLOWAT-设置接收数据前的缓冲区内的最小字节数-SO-RCVTIMEO-设置接收超时时间-SO-SNDTIMEO-设置发送超时时间-SO-BINDTODEVICE-将套接字绑定到一个特定的设备上-SO-ATTACH-FILTER和SO-DETACH-FILTER" class="headerlink" title="接口相关:    包括接口的索引、名字、标志、ip地址、物理地址、网卡映射、MTU等。这些信息定义在struct ifreq结构体中  - 头文件:    	&lt;net&#x2F;if.h&gt;  - 结构体原型:    - &#96;&#96;&#96;      struct ifreq {      #define IFHWADDRLEN	6          union          {              char	ifrn_name[IFNAMSIZ];		&#x2F;* if name, e.g. “en0” &#x2F;          } ifr_ifrn;          union {              struct	sockaddr ifru_addr;              struct	sockaddr ifru_dstaddr;              struct	sockaddr ifru_broadaddr;              struct	sockaddr ifru_netmask;              struct  sockaddr ifru_hwaddr;              short	ifru_flags;              int	ifru_ivalue;              int	ifru_mtu;              struct  ifmap ifru_map;              char	ifru_slave[IFNAMSIZ];	&#x2F; Just fits the size *&#x2F;              char	ifru_newname[IFNAMSIZ];              void *	ifru_data;              struct	if_settings ifru_settings;          } ifr_ifru;      };         - SO_PASSCRED    允许或禁止SCM_CREDENTIALS 控制消息的接收   - SO_TIMESTAMP    打开或关闭数据报中的时间戳接收   - SO_RCVLOWAT    设置接收数据前的缓冲区内的最小字节数   - SO_RCVTIMEO    设置接收超时时间   - SO_SNDTIMEO    设置发送超时时间   - SO_BINDTODEVICE    将套接字绑定到一个特定的设备上   - SO_ATTACH_FILTER和SO_DETACH_FILTER"></a>接口相关:    包括接口的索引、名字、标志、ip地址、物理地址、网卡映射、MTU等。这些信息定义在struct ifreq结构体中<br>  - 头文件:    	&lt;net&#x2F;if.h&gt;<br>  - 结构体原型:<br>    - &#96;&#96;&#96;<br>      struct ifreq {<br>      #define IFHWADDRLEN	6<br>          union<br>          {<br>              char	ifrn_name[IFNAMSIZ];		&#x2F;* if name, e.g. “en0” <em>&#x2F;<br>          } ifr_ifrn;<br><br>          union {<br>              struct	sockaddr ifru_addr;<br>              struct	sockaddr ifru_dstaddr;<br>              struct	sockaddr ifru_broadaddr;<br>              struct	sockaddr ifru_netmask;<br>              struct  sockaddr ifru_hwaddr;<br>              short	ifru_flags;<br>              int	ifru_ivalue;<br>              int	ifru_mtu;<br>              struct  ifmap ifru_map;<br>              char	ifru_slave[IFNAMSIZ];	&#x2F;</em> Just fits the size *&#x2F;<br>              char	ifru_newname[IFNAMSIZ];<br>              void *	ifru_data;<br>              struct	if_settings ifru_settings;<br>          } ifr_ifru;<br>      };<br>      <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">### &lt;dev id=&quot;setsockopt&quot;&gt;setsockopt函数使用说明&lt;/dev&gt;</span><br><span class="line">#### 头文件 #include&lt;sys/socket.h&gt;</span><br><span class="line">#### 函数原型   int setsockopt(int socket, int level, int option_name, const void* option_value, size_t option_len);</span><br><span class="line">#### 参数说明</span><br><span class="line">- socket:   套接字描述符</span><br><span class="line">- level:    被设置的选项级别    SOL_SOCKET被用于在套接字级别上设置选项</span><br><span class="line">- option_name:  指定准备设置的选项</span><br><span class="line">  - 在套接字级别(SOL_SOCKET)上可选的取值</span><br><span class="line">    - SO_DEBUG  调试信息</span><br><span class="line">    - SO_REUSEADDR  地址复用功能</span><br><span class="line">    - SO_DONTROUTE  路由查找功能</span><br><span class="line">    - SO_BROADCAST  发送广播数据</span><br><span class="line">    - SO_SNDBUF    设置发送缓冲区的大小</span><br><span class="line">    - SO_RCVBUF    设置接收缓冲区的大小</span><br><span class="line">    - SO_KEEPALIVE    套接字保活</span><br><span class="line">    - SO_OOBINLINE    紧急数据放入普通数据流</span><br><span class="line">    - SO_NO_CHECK    打开或关闭校验和</span><br><span class="line">    - SO_PRIORITY    设置在套接字发送的所有包的协议定义优先权Linux通过这一值来排列网络队列</span><br><span class="line">    这个值在0到6之间(包括0和6)    由option_value指定赋给sock-&gt;sk-&gt;sk_priority</span><br><span class="line">    - SO_LINGER    如果选择此选项, close或 shutdown将等到所有套接字里排队的消息成功发送或到达延迟时间后&gt;才会返回. 否则, 调用将立即返回</span><br><span class="line">      - 该选项的参数(option_value)是一个linger结构：</span><br><span class="line">      - ```</span><br><span class="line">        struct linger &#123;</span><br><span class="line">            int   l_onoff;   </span><br><span class="line">            int   l_linger;  </span><br><span class="line">        &#125;;</span><br></pre></td></tr></table></figure><br>   - SO_PASSCRED    允许或禁止SCM_CREDENTIALS 控制消息的接收<br>   - SO_TIMESTAMP    打开或关闭数据报中的时间戳接收<br>   - SO_RCVLOWAT    设置接收数据前的缓冲区内的最小字节数<br>   - SO_RCVTIMEO    设置接收超时时间<br>   - SO_SNDTIMEO    设置发送超时时间<br>   - SO_BINDTODEVICE    将套接字绑定到一个特定的设备上<br>   - SO_ATTACH_FILTER和SO_DETACH_FILTER</h2></li>
+<li>option_value: 设置选项的值</li>
+<li>option_len:   option_value的长度</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/07/29/raw_socket/" data-id="clkno20jw0004y8pzdy7o8oy0" data-title="raw socket" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-eloop" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2023/07/29/eloop/" class="article-date">
@@ -229,11 +977,23 @@
       <ul>
         
           <li>
-            <a href="/2023/07/29/eloop/">eloop</a>
+            <a href="/2023/07/29/gcc-note/">gcc-note</a>
           </li>
         
           <li>
-            <a href="/2023/07/27/hello-world/">Hello World</a>
+            <a href="/2023/07/29/makefile-note/">makefile-note</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/29/inotify/">inotify</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/29/unix%E5%9F%9F%E5%8D%8F%E8%AE%AE/">unix域协议</a>
+          </li>
+        
+          <li>
+            <a href="/2023/07/29/raw_socket/">raw socket</a>
           </li>
         
       </ul>
