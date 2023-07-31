@@ -76,6 +76,44 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-mapd-process" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/07/31/mapd-process/" class="article-date">
+  <time class="dt-published" datetime="2023-07-31T01:39:36.000Z" itemprop="datePublished">2023-07-31</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2023/07/31/mapd-process/">mapd_process</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/07/31/mapd-process/" data-id="clkq85lhf000050pzgdv3fygv" data-title="mapd_process" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-gcc-note" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2023/07/29/gcc-note/" class="article-date">
@@ -865,7 +903,7 @@ socketpair:	socketpair函数可以创建两个连接起来的unix域套接字
 <li><p>timeout</p>
 <ul>
 <li>结构体<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"> struct eloop_timeout &#123;</span><br><span class="line">struct dl_list list;</span><br><span class="line">struct os_reltime time;</span><br><span class="line">void *eloop_data;</span><br><span class="line">void *user_data;</span><br><span class="line">eloop_timeout_handler handler;</span><br><span class="line">   &#125;;</span><br></pre></td></tr></table></figure></li>
-<li>注册timeout事件 eloop_register_timeout</li>
+<li>注册timeout事件 eloop_register_timeout(secs, usecs, handler,)</li>
 <li>移除timeout事件 eloop_remove_timeout</li>
 <li>取消timeout事件 eloop_cancel_timeout</li>
 </ul>
@@ -878,7 +916,7 @@ socketpair:	socketpair函数可以创建两个连接起来的unix域套接字
 </ul>
 </li>
 </ul>
-<p>eloop_run<br>处理三种事件</p>
+<h1 id="eloop-run"><a href="#eloop-run" class="headerlink" title="eloop_run"></a>eloop_run</h1><p>处理三种事件</p>
 
       
     </div>
@@ -977,6 +1015,10 @@ socketpair:	socketpair函数可以创建两个连接起来的unix域套接字
       <ul>
         
           <li>
+            <a href="/2023/07/31/mapd-process/">mapd_process</a>
+          </li>
+        
+          <li>
             <a href="/2023/07/29/gcc-note/">gcc-note</a>
           </li>
         
@@ -990,10 +1032,6 @@ socketpair:	socketpair函数可以创建两个连接起来的unix域套接字
         
           <li>
             <a href="/2023/07/29/unix%E5%9F%9F%E5%8D%8F%E8%AE%AE/">unix域协议</a>
-          </li>
-        
-          <li>
-            <a href="/2023/07/29/raw_socket/">raw socket</a>
           </li>
         
       </ul>
