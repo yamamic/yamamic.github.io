@@ -76,6 +76,45 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-vscode远程工作cpu占用率过高问题修改" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/08/01/vscode%E8%BF%9C%E7%A8%8B%E5%B7%A5%E4%BD%9Ccpu%E5%8D%A0%E7%94%A8%E7%8E%87%E8%BF%87%E9%AB%98%E9%97%AE%E9%A2%98%E4%BF%AE%E6%94%B9/" class="article-date">
+  <time class="dt-published" datetime="2023-08-01T02:27:15.000Z" itemprop="datePublished">2023-08-01</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2023/08/01/vscode%E8%BF%9C%E7%A8%8B%E5%B7%A5%E4%BD%9Ccpu%E5%8D%A0%E7%94%A8%E7%8E%87%E8%BF%87%E9%AB%98%E9%97%AE%E9%A2%98%E4%BF%AE%E6%94%B9/">vscode远程工作cpu占用率过高问题修改</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>修改设置如下图即可<br><img src="/.com//pic/vscode-setting.png" alt="vscode setting"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/08/01/vscode%E8%BF%9C%E7%A8%8B%E5%B7%A5%E4%BD%9Ccpu%E5%8D%A0%E7%94%A8%E7%8E%87%E8%BF%87%E9%AB%98%E9%97%AE%E9%A2%98%E4%BF%AE%E6%94%B9/" data-id="clkromgc20000p4pzbwpfbmss" data-title="vscode远程工作cpu占用率过高问题修改" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-mapd-process" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2023/07/31/mapd-process/" class="article-date">
@@ -108,7 +147,32 @@
 </li>
 <li>mapd_init  初始化<ul>
 <li>log的初始化</li>
-<li><h2 id="全局变量global的初始化-Certification-0-daemonize-0-ctrl-interface-“-tmp-mapd-ctrl”-clientDBname-“-client-db-txt”-mapd-debug-level-mapd-debug-timestamp-wapp-map-buffer-size-15KB-wapp-map-buffer-申请空间"><a href="#全局变量global的初始化-Certification-0-daemonize-0-ctrl-interface-“-tmp-mapd-ctrl”-clientDBname-“-client-db-txt”-mapd-debug-level-mapd-debug-timestamp-wapp-map-buffer-size-15KB-wapp-map-buffer-申请空间" class="headerlink" title="全局变量global的初始化  - Certification   0  - daemonize   0  - ctrl_interface  “&#x2F;tmp&#x2F;mapd_ctrl”  - clientDBname  “.&#x2F;client_db.txt”  - mapd_debug_level  - mapd_debug_timestamp  - wapp_map_buffer_size  15KB  - wapp_map_buffer   申请空间"></a>全局变量global的初始化<br>  - Certification   0<br>  - daemonize   0<br>  - ctrl_interface  “&#x2F;tmp&#x2F;mapd_ctrl”<br>  - clientDBname  “.&#x2F;client_db.txt”<br>  - mapd_debug_level<br>  - mapd_debug_timestamp<br>  - wapp_map_buffer_size  15KB<br>  - wapp_map_buffer   申请空间</h2></li>
+<li>全局变量global的初始化<ul>
+<li>Certification   0</li>
+<li>daemonize   0</li>
+<li>ctrl_interface  “&#x2F;tmp&#x2F;mapd_ctrl”</li>
+<li>clientDBname  “.&#x2F;client_db.txt”</li>
+<li>mapd_debug_level</li>
+<li>mapd_debug_timestamp</li>
+<li>wapp_map_buffer_size  15KB</li>
+<li>wapp_map_buffer   申请空间</li>
+<li>ctrl_iface    初始化监听socket &#x2F;tmp&#x2F;mapd_ctrl<ul>
+<li>eloop_register_read_sock(priv-&gt;sock, mapd_global_ctrl_iface_receive, global, priv); &#x2F;tmp&#x2F;mapd_ctrl</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>连接wapp  wapp_open_connection(“&#x2F;tmp&#x2F;wapp_ctrl”, global);<ul>
+<li>eloop_register_read_sock(ctrl_conn-&gt;s, mapd_receive_from_wapp, global, ctrl_conn);</li>
+</ul>
+</li>
+<li>注册wapp事件  wlanif_register_wapp_events</li>
+<li>连接1905d _1905_open_connection</li>
+<li>获取wifi接口的状态填充到global</li>
+<li>初始化本设备的1905信息</li>
+<li>注册mapd_start_wired_iface_monitor    立刻执行    随后注册5s超时  自动识别设备为controller</li>
+<li>注册topo_srv_start_1905_timer 5s超时  更新拓扑图链表，删除断联超时的拓扑节点</li>
+<li>注册mapd_periodic</li>
 </ul>
 </li>
 </ul>
@@ -1018,7 +1082,7 @@ socketpair:	socketpair函数可以创建两个连接起来的unix域套接字
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li></ul>
     </div>
   </div>
 
@@ -1029,6 +1093,10 @@ socketpair:	socketpair函数可以创建两个连接起来的unix域套接字
     <h3 class="widget-title">最新文章</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2023/08/01/vscode%E8%BF%9C%E7%A8%8B%E5%B7%A5%E4%BD%9Ccpu%E5%8D%A0%E7%94%A8%E7%8E%87%E8%BF%87%E9%AB%98%E9%97%AE%E9%A2%98%E4%BF%AE%E6%94%B9/">vscode远程工作cpu占用率过高问题修改</a>
+          </li>
         
           <li>
             <a href="/2023/07/31/mapd-process/">mapd_process</a>
@@ -1044,10 +1112,6 @@ socketpair:	socketpair函数可以创建两个连接起来的unix域套接字
         
           <li>
             <a href="/2023/07/29/inotify/">inotify</a>
-          </li>
-        
-          <li>
-            <a href="/2023/07/29/unix%E5%9F%9F%E5%8D%8F%E8%AE%AE/">unix域协议</a>
           </li>
         
       </ul>
