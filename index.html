@@ -657,11 +657,11 @@
     <div class="e-content article-entry" itemprop="articleBody">
       
         <ul>
-<li>概念:    Unix域协议并不是一个实际的协议族,它只是在同一台主机上进行客户-服务器通信时,使用与在不同主机上的客户和服务器间通信<br>   时相同的API(套接口或XTI)的一种方法。<br>   当客户和服务器在同一台主机上时,Unix域协议是IPC通信方式的一种替代品。</li>
-</ul>
-<pre><code>-		Unix域协议提供了两种类型的套接口:    字节流套接口和数据报套接口
-</code></pre>
+<li><p>概念:    Unix域协议并不是一个实际的协议族,它只是在同一台主机上进行客户-服务器通信时,使用与在不同主机上的客户和服务器间通信时相同的API(套接口或XTI)的一种方法。当客户和服务器在同一台主机上时,Unix域协议是IPC通信方式的一种替代品。</p>
 <ul>
+<li>Unix域协议提供了两种类型的套接口:    字节流套接口和数据报套接口</li>
+</ul>
+</li>
 <li><p>   优点:    </p>
 <ol>
 <li>比起TCP协议通常要更快;</li>
@@ -677,11 +677,9 @@
 </li>
 <li><p>使用方式:    </p>
 <ul>
-<li><p>   说明:    和tcp&#x2F;udp套接字的方式类似,只需要将协议族替换为AF_LOCAL或者AF_UNIX,然后将地址替换为sockaddr_un即可。</p>
+<li><p>   说明:和tcp&#x2F;udp套接字的方式类似,只需要将协议族替换为AF_LOCAL或者AF_UNIX,然后将地址替换为sockaddr_un即可。</p>
 <ul>
-<li><pre><code>  要注意的是bind绑定的不是ip地址,而是用一个文件路径来作为地址(绑定的路径应使用绝对路径,避免相对路径的解析依赖	调用者的当前路径)POSIX声称使用相对路径绑定到uds将导致不可预计的结果
-</code></pre>
-</li>
+<li>   要注意的是bind绑定的不是ip地址,而是用一个文件路径来作为地址(绑定的路径应使用绝对路径,避免相对路径的解析依赖	调用者的当前路径)POSIX声称使用相对路径绑定到uds将导致不可预计的结果</li>
 </ul>
 </li>
 <li><p>   connect:    </p>
@@ -710,62 +708,23 @@
 </li>
 </ul>
 </li>
-<li></li>
+<li>   <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">/*</span><br><span class="line">* [XSI] Message header for recvmsg and sendmsg calls.</span><br><span class="line">* Used value-result for recvmsg, value only for sendmsg.</span><br><span class="line">*/</span><br><span class="line">struct msghdr &#123;</span><br><span class="line">    void		*msg_name;	/* [XSI] optional address */</span><br><span class="line">    socklen_t	msg_namelen;	/* [XSI] size of address */</span><br><span class="line">    struct		iovec *msg_iov;	/* [XSI] scatter/gather array */</span><br><span class="line">    int		msg_iovlen;	/* [XSI] # elements in msg_iov */</span><br><span class="line">    void		*msg_control;	/* [XSI] ancillary data, see below */</span><br><span class="line">    socklen_t	msg_controllen;	/* [XSI] ancillary data buffer len */</span><br><span class="line">    int		msg_flags;	/* [XSI] flags on received message */</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>验证发送者的身份:    	传递用户凭证。</li>
 </ul>
-<pre><code>    /*
-        * [XSI] Message header for recvmsg and sendmsg calls.
-        * Used value-result for recvmsg, value only for sendmsg.
-        */
-    struct msghdr &#123;
-        void		*msg_name;	/* [XSI] optional address */
-        socklen_t	msg_namelen;	/* [XSI] size of address */
-        struct		iovec *msg_iov;	/* [XSI] scatter/gather array */
-        int		msg_iovlen;	/* [XSI] # elements in msg_iov */
-        void		*msg_control;	/* [XSI] ancillary data, see below */
-        socklen_t	msg_controllen;	/* [XSI] ancillary data buffer len */
-        int		msg_flags;	/* [XSI] flags on received message */
-    &#125;;
-            
-    验证发送者的身份:    	传递用户凭证。
-
--   例子:    
-        int sockfd;
-        struct sockaddr_un srv_addr,addr2;
-        //先调用socket创建套接字
-        sockfd = socket(AF_LOCAL, SOCK_STREAM, 0);
-        //对已存在的路径进行bind会导致失败,所以需要预先unlink删除文件
-        unlink(pathname);
-        //初始化地址结构
-        bzero(&amp;srv_addr,sizeof(srv_addr));
-        //设置协议族为AF_LOCAL或AF_UNIX
-        srv_addr.sun_family = AF_LOCAL;
-        //设置地址的文件路径
-        strcpy(srv_addr.sun_path,pathname);
-        //绑定文件路径
-        bind(sockfd, (struct sockaddr*)&amp;srv_addr,sizeof(srv_addr));
-        //开始监听
-        listen(sockfd, 1);
-        
-        while(1)
-        &#123;
-            connfd = accept(sockfd, (struct sockaddr*)&amp;addr2,sizeof(addr2));
-            
-        &#125;
-        
-        客户端connect:
-            struct sockaddr_un cliaddr;
-            cliaddr.sun_family = AF_LOCAL;
-            strcpy(cliaddr.sun_path, pathname);
-            connect(connnfd, (struct sockaddr*)&amp;cliaddr,sizeof(cliaddr));
-        
-socketpair:	socketpair函数可以创建两个连接起来的unix域套接字
-    头文件:    	&lt;sys/socket.h&gt;
-    函数原型:    	int socketpair(int family, int type, int protocol, int sockfd[2]);
-    使用方法:    	family:AF_LOCAL
-                protocol:0
-                type:SOCK_STREAM or SOCK_DGRAM
-                sockfd[2]:新创建的两个套接字描述符作为sockfd[0]和sockfd[1]返回
+</li>
+<li><p>例子:  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">    int sockfd;</span><br><span class="line">    struct sockaddr_un srv_addr,addr2;</span><br><span class="line">    //先调用socket创建套接字</span><br><span class="line">    sockfd = socket(AF_LOCAL, SOCK_STREAM, 0);</span><br><span class="line">    //对已存在的路径进行bind会导致失败,所以需要预先unlink删除文件</span><br><span class="line">    unlink(pathname);</span><br><span class="line">    //初始化地址结构</span><br><span class="line">    bzero(&amp;srv_addr,sizeof(srv_addr));</span><br><span class="line">    //设置协议族为AF_LOCAL或AF_UNIX</span><br><span class="line">    srv_addr.sun_family = AF_LOCAL;</span><br><span class="line">    //设置地址的文件路径</span><br><span class="line">    strcpy(srv_addr.sun_path,pathname);</span><br><span class="line">    //绑定文件路径</span><br><span class="line">    bind(sockfd, (struct sockaddr*)&amp;srv_addr,sizeof(srv_addr));</span><br><span class="line">    //开始监听</span><br><span class="line">    listen(sockfd, 1);</span><br><span class="line">    </span><br><span class="line">    while(1)</span><br><span class="line">    &#123;</span><br><span class="line">        connfd = accept(sockfd, (struct sockaddr*)&amp;addr2,sizeof(addr2));</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">```    </span><br><span class="line">    客户端connect:</span><br></pre></td></tr></table></figure>
+<pre><code>struct sockaddr_un cliaddr;
+cliaddr.sun_family = AF_LOCAL;
+strcpy(cliaddr.sun_path, pathname);
+connect(connnfd, (struct sockaddr*)&amp;cliaddr,sizeof(cliaddr));
 </code></pre>
+<pre><code>
+</code></pre>
+</li>
+</ul>
+<p>socketpair:	socketpair函数可以创建两个连接起来的unix域套接字<br>    头文件:    	&lt;sys&#x2F;socket.h&gt;<br>    函数原型:    	int socketpair(int family, int type, int protocol, int sockfd[2]);<br>    使用方法:    	family:AF_LOCAL<br>                protocol:0<br>                type:SOCK_STREAM or SOCK_DGRAM<br>                sockfd[2]:新创建的两个套接字描述符作为sockfd[0]和sockfd[1]返回</p>
 
       
     </div>
