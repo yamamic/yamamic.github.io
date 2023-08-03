@@ -6,15 +6,15 @@
   
   <title>inotify | Kazi&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="inotify:    inotify是一种文件系统的变化通知机制,如文件增加、删除事件可以立刻让用户态得知.由著名的桌面搜索引擎项目beagle引入,并在Gamin等项目中被应用.Inotify 是为替代 dnotify 而设计的,它克服了 dnotify 的缺陷,提供了更好用的,简洁而强大的文件变化通知机制：  Inotify 不需要对被监视的目标打开文件描述符,而且如果被监视目标在可移动介质">
+  <meta name="description" content="inotify是一种文件系统的变化通知机制,如文件增加、删除事件可以立刻让用户态得知.由著名的桌面搜索引擎项目beagle引入,并在Gamin等项目中被应用.inotify 是为替代 dnotify 而设计的,它克服了 dnotify 的缺陷,提供了更好用的,简洁而强大的文件变化通知机制： Inotify 不需要对被监视的目标打开文件描述符,而且如果被监视目标在可移动介质上,那么在 umount">
 <meta property="og:type" content="article">
 <meta property="og:title" content="inotify">
 <meta property="og:url" content="https://yamamic.github.io/2023/07/29/inotify/index.html">
 <meta property="og:site_name" content="Kazi&#39;s Blog">
-<meta property="og:description" content="inotify:    inotify是一种文件系统的变化通知机制,如文件增加、删除事件可以立刻让用户态得知.由著名的桌面搜索引擎项目beagle引入,并在Gamin等项目中被应用.Inotify 是为替代 dnotify 而设计的,它克服了 dnotify 的缺陷,提供了更好用的,简洁而强大的文件变化通知机制：  Inotify 不需要对被监视的目标打开文件描述符,而且如果被监视目标在可移动介质">
+<meta property="og:description" content="inotify是一种文件系统的变化通知机制,如文件增加、删除事件可以立刻让用户态得知.由著名的桌面搜索引擎项目beagle引入,并在Gamin等项目中被应用.inotify 是为替代 dnotify 而设计的,它克服了 dnotify 的缺陷,提供了更好用的,简洁而强大的文件变化通知机制： Inotify 不需要对被监视的目标打开文件描述符,而且如果被监视目标在可移动介质上,那么在 umount">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-07-29T06:45:37.000Z">
-<meta property="article:modified_time" content="2023-07-29T06:56:58.331Z">
+<meta property="article:modified_time" content="2023-08-03T03:37:25.015Z">
 <meta property="article:author" content="Kazi Ball">
 <meta property="article:tag" content="record blog">
 <meta name="twitter:card" content="summary">
@@ -98,8 +98,7 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <p>inotify:    inotify是一种文件系统的变化通知机制,如文件增加、删除事件可以立刻让用户态得知.由著名的桌面搜索引擎项目beagle引入,并在Gamin等项目中被应用.<br>Inotify 是为替代 dnotify 而设计的,它克服了 dnotify 的缺陷,提供了更好用的,简洁而强大的文件变化通知机制：</p>
-<ol>
+        <h3 id="inotify是一种文件系统的变化通知机制-如文件增加、删除事件可以立刻让用户态得知-由著名的桌面搜索引擎项目beagle引入-并在Gamin等项目中被应用"><a href="#inotify是一种文件系统的变化通知机制-如文件增加、删除事件可以立刻让用户态得知-由著名的桌面搜索引擎项目beagle引入-并在Gamin等项目中被应用" class="headerlink" title="inotify是一种文件系统的变化通知机制,如文件增加、删除事件可以立刻让用户态得知.由著名的桌面搜索引擎项目beagle引入,并在Gamin等项目中被应用."></a>inotify是一种文件系统的变化通知机制,如文件增加、删除事件可以立刻让用户态得知.由著名的桌面搜索引擎项目beagle引入,并在Gamin等项目中被应用.</h3><h3 id="inotify-是为替代-dnotify-而设计的-它克服了-dnotify-的缺陷-提供了更好用的-简洁而强大的文件变化通知机制："><a href="#inotify-是为替代-dnotify-而设计的-它克服了-dnotify-的缺陷-提供了更好用的-简洁而强大的文件变化通知机制：" class="headerlink" title="inotify 是为替代 dnotify 而设计的,它克服了 dnotify 的缺陷,提供了更好用的,简洁而强大的文件变化通知机制："></a>inotify 是为替代 dnotify 而设计的,它克服了 dnotify 的缺陷,提供了更好用的,简洁而强大的文件变化通知机制：</h3><ol>
 <li><p>Inotify 不需要对被监视的目标打开文件描述符,而且如果被监视目标在可移动介质上,那么在 umount 该介质上的文件系统后,被监视目标对应的 watch 将被自动删除,并且会产生一个 umount 事件。</p>
 </li>
 <li><p>Inotify 既可以监视文件,也可以监视目录。</p>

@@ -6,15 +6,15 @@
   
   <title>makefile-note | Kazi&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="makefile-	文件名格式:Makefile makefile GNUmakefile-	规则:    -	由目标、目标依赖、命令三部分构成(一个规则中不一定具有所有的三个规则,目标依赖和命令都可以无)            目标:目标依赖                命令            a.out:hello.c                gcc -o a.out hello.">
+  <meta name="description" content="文件名格式:Makefile makefile GNUmakefile     规则:     由目标、目标依赖、命令三部分构成(一个规则中不一定具有所有的三个规则,目标依赖和命令都可以无)   1234目标:目标依赖	命令a.out:hello.c	gcc -o a.out hello.c    规则可以有多个目标   %.o:%.c       gcc -o %.o %.c">
 <meta property="og:type" content="article">
 <meta property="og:title" content="makefile-note">
 <meta property="og:url" content="https://yamamic.github.io/2023/07/29/makefile-note/index.html">
 <meta property="og:site_name" content="Kazi&#39;s Blog">
-<meta property="og:description" content="makefile-	文件名格式:Makefile makefile GNUmakefile-	规则:    -	由目标、目标依赖、命令三部分构成(一个规则中不一定具有所有的三个规则,目标依赖和命令都可以无)            目标:目标依赖                命令            a.out:hello.c                gcc -o a.out hello.">
+<meta property="og:description" content="文件名格式:Makefile makefile GNUmakefile     规则:     由目标、目标依赖、命令三部分构成(一个规则中不一定具有所有的三个规则,目标依赖和命令都可以无)   1234目标:目标依赖	命令a.out:hello.c	gcc -o a.out hello.c    规则可以有多个目标   %.o:%.c       gcc -o %.o %.c">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-07-29T06:45:49.000Z">
-<meta property="article:modified_time" content="2023-07-29T06:52:11.821Z">
+<meta property="article:modified_time" content="2023-08-03T03:36:20.023Z">
 <meta property="article:author" content="Kazi Ball">
 <meta property="article:tag" content="record blog">
 <meta name="twitter:card" content="summary">
@@ -98,8 +98,21 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <p>makefile<br>-	文件名格式:Makefile makefile GNUmakefile<br>-	规则:<br>    -	由目标、目标依赖、命令三部分构成(一个规则中不一定具有所有的三个规则,目标依赖和命令都可以无)<br>            目标:目标依赖<br>                命令<br>            a.out:hello.c<br>                gcc -o a.out hello.c<br>    -	规则可以有多个目标<br>            %.o:%.c<br>                gcc -o %.o %.c<br>-	make目标依赖:<br>    -	make第一次编译项目会依次编译所有的源文件。修改程序后make会根据文件的时间戳判断文件是否有更新来决定是否对其进行编译。<br>    -	头文件依赖:<br>            一般不将头文件添加至规则的目标依赖列表。这样如果头文件改变,不会重新编译源文件。可以将头文件添加至依赖目标中,但是<br>            这样过于繁琐。可以使用gcc -MM自动生成头文件依赖关系。</p>
+        <ul>
+<li><p>   文件名格式:Makefile makefile GNUmakefile</p>
+</li>
+<li><p>   规则:</p>
 <ul>
+<li>   由目标、目标依赖、命令三部分构成(一个规则中不一定具有所有的三个规则,目标依赖和命令都可以无)   <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">目标:目标依赖</span><br><span class="line">	命令</span><br><span class="line">a.out:hello.c</span><br><span class="line">	gcc -o a.out hello.c</span><br></pre></td></tr></table></figure></li>
+<li>   规则可以有多个目标<br>   %.o:%.c<br>       gcc -o %.o %.c</li>
+</ul>
+</li>
+<li><p>   make目标依赖:</p>
+<ul>
+<li>   make第一次编译项目会依次编译所有的源文件。修改程序后make会根据文件的时间戳判断文件是否有更新来决定是否对其进行编译。</li>
+<li>   头文件依赖:<br>   一般不将头文件添加至规则的目标依赖列表。这样如果头文件改变,不会重新编译源文件。可以将头文件添加至依赖目标中,但是<br>   这样过于繁琐。可以使用gcc -MM自动生成头文件依赖关系。</li>
+</ul>
+</li>
 <li><p>   命令:</p>
 <ul>
 <li>   make对于规则中每一个命令会开一个进程执行,每条命令执行完make会检测其返回码。命令返回成功,则make继续执行下一个命令；命令<br>   执行失败,make终止执行当前的规则,退出编译。</li>

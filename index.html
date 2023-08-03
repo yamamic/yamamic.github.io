@@ -167,7 +167,10 @@
 </ul>
 </li>
 <li>注册wapp事件  wlanif_register_wapp_events</li>
-<li>连接1905d _1905_open_connection</li>
+<li>连接1905d _1905_open_connection  <ul>
+<li>处理1905发来的消息    _1905_interface_parse_event</li>
+</ul>
+</li>
 <li>获取wifi接口的状态填充到global</li>
 <li>初始化本设备的1905信息</li>
 <li>注册mapd_start_wired_iface_monitor    立刻执行    随后注册5s超时  自动识别设备为controller</li>
@@ -254,8 +257,21 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <p>makefile<br>-	文件名格式:Makefile makefile GNUmakefile<br>-	规则:<br>    -	由目标、目标依赖、命令三部分构成(一个规则中不一定具有所有的三个规则,目标依赖和命令都可以无)<br>            目标:目标依赖<br>                命令<br>            a.out:hello.c<br>                gcc -o a.out hello.c<br>    -	规则可以有多个目标<br>            %.o:%.c<br>                gcc -o %.o %.c<br>-	make目标依赖:<br>    -	make第一次编译项目会依次编译所有的源文件。修改程序后make会根据文件的时间戳判断文件是否有更新来决定是否对其进行编译。<br>    -	头文件依赖:<br>            一般不将头文件添加至规则的目标依赖列表。这样如果头文件改变,不会重新编译源文件。可以将头文件添加至依赖目标中,但是<br>            这样过于繁琐。可以使用gcc -MM自动生成头文件依赖关系。</p>
+        <ul>
+<li><p>   文件名格式:Makefile makefile GNUmakefile</p>
+</li>
+<li><p>   规则:</p>
 <ul>
+<li>   由目标、目标依赖、命令三部分构成(一个规则中不一定具有所有的三个规则,目标依赖和命令都可以无)   <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">目标:目标依赖</span><br><span class="line">	命令</span><br><span class="line">a.out:hello.c</span><br><span class="line">	gcc -o a.out hello.c</span><br></pre></td></tr></table></figure></li>
+<li>   规则可以有多个目标<br>   %.o:%.c<br>       gcc -o %.o %.c</li>
+</ul>
+</li>
+<li><p>   make目标依赖:</p>
+<ul>
+<li>   make第一次编译项目会依次编译所有的源文件。修改程序后make会根据文件的时间戳判断文件是否有更新来决定是否对其进行编译。</li>
+<li>   头文件依赖:<br>   一般不将头文件添加至规则的目标依赖列表。这样如果头文件改变,不会重新编译源文件。可以将头文件添加至依赖目标中,但是<br>   这样过于繁琐。可以使用gcc -MM自动生成头文件依赖关系。</li>
+</ul>
+</li>
 <li><p>   命令:</p>
 <ul>
 <li>   make对于规则中每一个命令会开一个进程执行,每条命令执行完make会检测其返回码。命令返回成功,则make继续执行下一个命令；命令<br>   执行失败,make终止执行当前的规则,退出编译。</li>
@@ -502,8 +518,7 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <p>inotify:    inotify是一种文件系统的变化通知机制,如文件增加、删除事件可以立刻让用户态得知.由著名的桌面搜索引擎项目beagle引入,并在Gamin等项目中被应用.<br>Inotify 是为替代 dnotify 而设计的,它克服了 dnotify 的缺陷,提供了更好用的,简洁而强大的文件变化通知机制：</p>
-<ol>
+        <h3 id="inotify是一种文件系统的变化通知机制-如文件增加、删除事件可以立刻让用户态得知-由著名的桌面搜索引擎项目beagle引入-并在Gamin等项目中被应用"><a href="#inotify是一种文件系统的变化通知机制-如文件增加、删除事件可以立刻让用户态得知-由著名的桌面搜索引擎项目beagle引入-并在Gamin等项目中被应用" class="headerlink" title="inotify是一种文件系统的变化通知机制,如文件增加、删除事件可以立刻让用户态得知.由著名的桌面搜索引擎项目beagle引入,并在Gamin等项目中被应用."></a>inotify是一种文件系统的变化通知机制,如文件增加、删除事件可以立刻让用户态得知.由著名的桌面搜索引擎项目beagle引入,并在Gamin等项目中被应用.</h3><h3 id="inotify-是为替代-dnotify-而设计的-它克服了-dnotify-的缺陷-提供了更好用的-简洁而强大的文件变化通知机制："><a href="#inotify-是为替代-dnotify-而设计的-它克服了-dnotify-的缺陷-提供了更好用的-简洁而强大的文件变化通知机制：" class="headerlink" title="inotify 是为替代 dnotify 而设计的,它克服了 dnotify 的缺陷,提供了更好用的,简洁而强大的文件变化通知机制："></a>inotify 是为替代 dnotify 而设计的,它克服了 dnotify 的缺陷,提供了更好用的,简洁而强大的文件变化通知机制：</h3><ol>
 <li><p>Inotify 不需要对被监视的目标打开文件描述符,而且如果被监视目标在可移动介质上,那么在 umount 该介质上的文件系统后,被监视目标对应的 watch 将被自动删除,并且会产生一个 umount 事件。</p>
 </li>
 <li><p>Inotify 既可以监视文件,也可以监视目录。</p>
