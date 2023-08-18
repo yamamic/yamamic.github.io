@@ -4,17 +4,17 @@
   <meta charset="utf-8">
   
   
-  <title>mapd_process | Kazi&#39;s Blog</title>
+  <title>DHCP报文及协议 | Kazi&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="main.c mapd_fd_wordaround  确保&#x2F;dev&#x2F;null打开且为2 初始化全局变量 g_map_cfg_path    &#x2F;etc&#x2F;mapd_cfg.txt g_map_1905_cfg_path   &#x2F;etc&#x2F;map_cfg.txt   mapd_init  初始化 log的初始化 全局变量global的初始化 Ce">
+  <meta name="description" content="this is a website for record kazi thought and knowledge">
 <meta property="og:type" content="article">
-<meta property="og:title" content="mapd_process">
-<meta property="og:url" content="https://yamamic.github.io/2023/07/31/mapd-process/index.html">
+<meta property="og:title" content="DHCP报文及协议">
+<meta property="og:url" content="https://yamamic.github.io/2023/08/18/DHCP%E6%8A%A5%E6%96%87%E5%8F%8A%E5%8D%8F%E8%AE%AE/DHCP%E6%8A%A5%E6%96%87%E5%8F%8A%E5%8D%8F%E8%AE%AE/index.html">
 <meta property="og:site_name" content="Kazi&#39;s Blog">
-<meta property="og:description" content="main.c mapd_fd_wordaround  确保&#x2F;dev&#x2F;null打开且为2 初始化全局变量 g_map_cfg_path    &#x2F;etc&#x2F;mapd_cfg.txt g_map_1905_cfg_path   &#x2F;etc&#x2F;map_cfg.txt   mapd_init  初始化 log的初始化 全局变量global的初始化 Ce">
+<meta property="og:description" content="this is a website for record kazi thought and knowledge">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-07-31T01:39:36.000Z">
-<meta property="article:modified_time" content="2023-08-03T03:34:30.102Z">
+<meta property="article:published_time" content="2023-08-18T01:54:10.000Z">
+<meta property="article:modified_time" content="2023-08-18T01:54:10.152Z">
 <meta property="article:author" content="Kazi Ball">
 <meta property="article:tag" content="record blog">
 <meta name="twitter:card" content="summary">
@@ -76,10 +76,10 @@
 </header>
 
       <div class="outer">
-        <section id="main"><article id="post-mapd-process" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+        <section id="main"><article id="post-DHCP报文及协议/DHCP报文及协议" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
-    <a href="/2023/07/31/mapd-process/" class="article-date">
-  <time class="dt-published" datetime="2023-07-31T01:39:36.000Z" itemprop="datePublished">2023-07-31</time>
+    <a href="/2023/08/18/DHCP%E6%8A%A5%E6%96%87%E5%8F%8A%E5%8D%8F%E8%AE%AE/DHCP%E6%8A%A5%E6%96%87%E5%8F%8A%E5%8D%8F%E8%AE%AE/" class="article-date">
+  <time class="dt-published" datetime="2023-08-18T01:54:10.000Z" itemprop="datePublished">2023-08-18</time>
 </a>
     
   </div>
@@ -90,7 +90,7 @@
         
   
     <h1 class="p-name article-title" itemprop="headline name">
-      mapd_process
+      DHCP报文及协议
     </h1>
   
 
@@ -98,55 +98,11 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <ul>
-<li>main.c<ul>
-<li>mapd_fd_wordaround  确保&#x2F;dev&#x2F;null打开且为2</li>
-<li>初始化全局变量<ul>
-<li>g_map_cfg_path    &#x2F;etc&#x2F;mapd_cfg.txt</li>
-<li>g_map_1905_cfg_path   &#x2F;etc&#x2F;map_cfg.txt</li>
-</ul>
-</li>
-<li>mapd_init  初始化<ul>
-<li>log的初始化</li>
-<li>全局变量global的初始化<ul>
-<li>Certification   0</li>
-<li>daemonize   0</li>
-<li>ctrl_interface  “&#x2F;tmp&#x2F;mapd_ctrl”</li>
-<li>clientDBname  “.&#x2F;client_db.txt”</li>
-<li>mapd_debug_level</li>
-<li>mapd_debug_timestamp</li>
-<li>wapp_map_buffer_size  15KB</li>
-<li>wapp_map_buffer   申请空间</li>
-<li>ctrl_iface    初始化监听socket &#x2F;tmp&#x2F;mapd_ctrl<ul>
-<li>eloop_register_read_sock(priv-&gt;sock, mapd_global_ctrl_iface_receive, global, priv); &#x2F;tmp&#x2F;mapd_ctrl</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>连接wapp  wapp_open_connection(“&#x2F;tmp&#x2F;wapp_ctrl”, global);<ul>
-<li>eloop_register_read_sock(ctrl_conn-&gt;s, mapd_receive_from_wapp, global, ctrl_conn);</li>
-</ul>
-</li>
-<li>注册wapp事件  wlanif_register_wapp_events</li>
-<li>连接1905d _1905_open_connection  <ul>
-<li>处理1905发来的消息    _1905_interface_parse_event</li>
-</ul>
-</li>
-<li>获取wifi接口的状态填充到global</li>
-<li>初始化本设备的1905信息</li>
-<li>注册mapd_start_wired_iface_monitor    立刻执行    随后注册5s超时  自动识别设备为controller</li>
-<li>注册topo_srv_start_1905_timer 5s超时  更新拓扑图链表，删除断联超时的拓扑节点</li>
-<li>注册mapd_periodic</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
+        
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://yamamic.github.io/2023/07/31/mapd-process/" data-id="clks0noi00005cwpz1p9jfst7" data-title="mapd_process" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      <a data-url="https://yamamic.github.io/2023/08/18/DHCP%E6%8A%A5%E6%96%87%E5%8F%8A%E5%8D%8F%E8%AE%AE/DHCP%E6%8A%A5%E6%96%87%E5%8F%8A%E5%8D%8F%E8%AE%AE/" data-id="cllfxu22e000008pzgooz041r" data-title="DHCP报文及协议" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -156,19 +112,10 @@
     
 <nav id="article-nav">
   
-    <a href="/2023/07/31/1905-process/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">前一篇</strong>
-      <div class="article-nav-title">
-        
-          (no title)
-        
-      </div>
-    </a>
   
-  
-    <a href="/2023/07/29/gcc-note/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2023/08/01/vscode%E8%BF%9C%E7%A8%8B%E5%B7%A5%E4%BD%9Ccpu%E5%8D%A0%E7%94%A8%E7%8E%87%E8%BF%87%E9%AB%98%E9%97%AE%E9%A2%98%E4%BF%AE%E6%94%B9/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">后一篇</strong>
-      <div class="article-nav-title">gcc-note</div>
+      <div class="article-nav-title">vscode远程工作cpu占用率过高问题修改</div>
     </a>
   
 </nav>
