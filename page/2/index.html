@@ -76,6 +76,77 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-eloop" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/07/29/eloop/" class="article-date">
+  <time class="dt-published" datetime="2023-07-29T06:29:23.000Z" itemprop="datePublished">2023-07-29</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2023/07/29/eloop/">eloop</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>三种事件socket,timeout,signal       </p>
+<ul>
+<li><p>socket</p>
+<ul>
+<li>结构体  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"> struct eloop_sock &#123;</span><br><span class="line">int sock;</span><br><span class="line">void *eloop_data;</span><br><span class="line">void *user_data;</span><br><span class="line">eloop_sock_handler handler;</span><br><span class="line"> &#125;;</span><br><span class="line"></span><br><span class="line"> struct eloop_sock_table &#123;</span><br><span class="line">int count;</span><br><span class="line">struct eloop_sock *table;</span><br><span class="line">eloop_event_type type;</span><br><span class="line">int changed;</span><br><span class="line"> &#125;;</span><br></pre></td></tr></table></figure></li>
+<li>类型<ul>
+<li>read</li>
+<li>write</li>
+<li>exception</li>
+</ul>
+</li>
+<li>添加sock eloop_sock_table_add_sock</li>
+<li>移除sock eloop_sock_table_remove_sock</li>
+<li>执行回调函数处理sock事件 eloop_sock_table_dispatch</li>
+</ul>
+</li>
+<li><p>timeout</p>
+<ul>
+<li>结构体<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"> struct eloop_timeout &#123;</span><br><span class="line">struct dl_list list;</span><br><span class="line">struct os_reltime time;</span><br><span class="line">void *eloop_data;</span><br><span class="line">void *user_data;</span><br><span class="line">eloop_timeout_handler handler;</span><br><span class="line">   &#125;;</span><br></pre></td></tr></table></figure></li>
+<li>注册timeout事件 eloop_register_timeout(secs, usecs, handler,)</li>
+<li>移除timeout事件 eloop_remove_timeout</li>
+<li>取消timeout事件 eloop_cancel_timeout</li>
+</ul>
+</li>
+<li><p>signal</p>
+<ul>
+<li>结构体<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">  struct eloop_signal &#123;</span><br><span class="line">int sig;</span><br><span class="line">void *user_data;</span><br><span class="line">eloop_signal_handler handler;</span><br><span class="line">int signaled;</span><br><span class="line">   &#125;;</span><br></pre></td></tr></table></figure></li>
+<li>eloop_register_signal</li>
+<li>处理 eloop_handle_signal(select未触发或超时时只计算信号事件数量) eloop_process_pending_signals（待select触发或超时后处理信号事件）<br>主要结构体struct eloop_data<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">struct eloop_data&#123;</span><br><span class="line">    int max_sock;</span><br><span class="line">    int count;  //sum of all table counts</span><br><span class="line">    struct eloop_sock_table readers;</span><br><span class="line">    struct eloop_sock_table writers;</span><br><span class="line">    struct eloop_sock_table exceptions;</span><br><span class="line"></span><br><span class="line">    struct dl_list timeout;</span><br><span class="line"></span><br><span class="line">    int signal_count;</span><br><span class="line">    struct eloop_signal *signals;</span><br><span class="line">    int signaled;</span><br><span class="line">    int pending_terminate;</span><br><span class="line"></span><br><span class="line">    int terminate;</span><br><span class="line">&#125;</span><br><span class="line">static struct eloop_data eloop;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h1 id="eloop-run"><a href="#eloop-run" class="headerlink" title="eloop_run"></a>eloop_run</h1><p>处理三种事件</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://yamamic.github.io/2023/07/29/eloop/" data-id="clks0nohw0001cwpzf4lo0wwl" data-title="eloop" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-hello-world" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2023/07/27/hello-world/" class="article-date">
@@ -163,6 +234,10 @@
       <ul>
         
           <li>
+            <a href="/2023/08/25/dns/">dns server</a>
+          </li>
+        
+          <li>
             <a href="/2023/08/18/DHCP%E6%8A%A5%E6%96%87%E5%8F%8A%E5%8D%8F%E8%AE%AE/DHCP%E6%8A%A5%E6%96%87%E5%8F%8A%E5%8D%8F%E8%AE%AE/">DHCP报文及协议</a>
           </li>
         
@@ -176,10 +251,6 @@
         
           <li>
             <a href="/2023/07/31/mapd-process/">mapd_process</a>
-          </li>
-        
-          <li>
-            <a href="/2023/07/29/gcc-note/">gcc-note</a>
           </li>
         
       </ul>
