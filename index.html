@@ -108,11 +108,11 @@
 <li>若租约时间过去一半后，客户端未能与原DHCP服务器进行通信。等待租约时间过去3&#x2F;4，客户端会进入重绑定状态，向任何可用的DHCP服务器广播（最多3次）一个DHCP Discover消息用于更新当前IP租约</li>
 <li>若租约到期客户端仍未连接到任何一台服务器，客户端必须立即停止其使用的IP地址然后重新开始获得新的IP地址租约</li>
 </ol>
-<h3 id="DHCP报文格式"><a href="#DHCP报文格式" class="headerlink" title="DHCP报文格式"></a>DHCP报文格式</h3><p>OP(1 Byte)      Htypt(1 Byte)       Hlen(1 Byte)        Hops(1 Byte)<br>                        Xid(4 Bytes)<br>        Secs(2 Bytes)                       Flags(2 Bytes)<br>                        Ciaddr(4 Bytes)<br>                        Yiaddr(4 Bytes)<br>                        Siaddr(4 Bytes)<br>                        Giaddr(4 Bytes)<br>                        Chaddr(16 Bytes)<br>                        Sname(64 Bytes)<br>                        File(128 Bytes)<br>                        Options(可变长度)</p>
+<h3 id="DHCP报文格式"><a href="#DHCP报文格式" class="headerlink" title="DHCP报文格式"></a>DHCP报文格式</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">OP(1 Byte)      Htypt(1 Byte)       Hlen(1 Byte)        Hops(1 Byte)</span><br><span class="line">                        Xid(4 Bytes)</span><br><span class="line">        Secs(2 Bytes)                       Flags(2 Bytes)</span><br><span class="line">                        Ciaddr(4 Bytes)</span><br><span class="line">                        Yiaddr(4 Bytes)</span><br><span class="line">                        Siaddr(4 Bytes)</span><br><span class="line">                        Giaddr(4 Bytes)</span><br><span class="line">                        Chaddr(16 Bytes)</span><br><span class="line">                        Sname(64 Bytes)</span><br><span class="line">                        File(128 Bytes)</span><br><span class="line">                        Options(可变长度)</span><br></pre></td></tr></table></figure>
 <ul>
 <li>OP<p>报文操作类型。<ul>
-<li>1:请求报文,包含DHCP Discover,DHCP Request,DHCP Release,DHCP Inform和DHCP Decline</li>
-<li>2:应答报文,包含DHCP Offer,DHCP ACK和DHCP NAK</li>
+<li>1-&gt;请求报文,包含DHCP Discover,DHCP Request,DHCP Release,DHCP Inform和DHCP Decline</li>
+<li>2-&gt;应答报文,包含DHCP Offer,DHCP ACK和DHCP NAK</li>
 </ul>
 </p></li>
 <li>Htypt<p>客户端的MAC地址了下,为1时最常见</p></li>
@@ -128,7 +128,10 @@
 <li>Chaddr<p>DHCP客户端的MAC地址</p></li>
 <li>Sname<p>为DHCP客户端分配IP地址的DHCP服务器名称(DNS域名格式).Offer和ACK报文中显示发送报文的DHCP服务器名称,其他报文显示为0.</p></li>
 <li>File<p>DHCP服务器为DHCP客户端指定的启动配置文件名称及路径信息.仅在DHCP Offer报文中显示,其他报文显示为空.</p></li>
-<li>Options<p>可选字段,长度可变,格式为”代码(1字节)+长度(1字节)+数据”</p></li>
+<li>Options<p>可选字段,长度可变,格式为”代码(1字节)+长度(1字节)+数据”.</p><p>示例:<ul>
+<li>option(53)len(1)data(01) -&gt; 0x350101</li>
+</ul>
+</p></li>
 </ul>
 
       
