@@ -76,6 +76,76 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-DHCP协议" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/11/09/DHCP%E5%8D%8F%E8%AE%AE/" class="article-date">
+  <time class="dt-published" datetime="2023-11-09T08:48:18.000Z" itemprop="datePublished">2023-11-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2023/11/09/DHCP%E5%8D%8F%E8%AE%AE/">DHCP协议</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h3 id="DHCP客户端请求IP地址的过程"><a href="#DHCP客户端请求IP地址的过程" class="headerlink" title="DHCP客户端请求IP地址的过程"></a>DHCP客户端请求IP地址的过程</h3><p>client                                               server<br>        —————————&gt; DHCP Discover<br>        DHCP Offer &lt;——————————<br>        —————————-&gt; DHCP Request<br>        DHCP ACK &lt;——————————–</p>
+<ol>
+<li>若客户端请求的是一个无效的或存在冲突的IP地址，则DHCP服务器可以响应一个DHCP NAK消息用于拒绝并强迫客户端释放其IP地址并获得一个新的有效的地址</li>
+<li>若客户端无法得到一个新的IP地址，DHCP客户端自己会产生一个169.254.0.0&#x2F;16网段中的IP地址作为临时地址</li>
+</ol>
+<h3 id="租约更新流程"><a href="#租约更新流程" class="headerlink" title="租约更新流程"></a>租约更新流程</h3><ol>
+<li>租约时间过去一半后，客户端向DHCP服务器发送请求，请求更新和延长当前租约。最多重发3次，如果找到了DHCP服务器，则服务器会向客户端发送一个DHCP应答消息。</li>
+<li>若租约时间过去一半后，客户端未能与原DHCP服务器进行通信。等待租约时间过去3&#x2F;4，客户端会进入重绑定状态，向任何可用的DHCP服务器广播（最多3次）一个DHCP Discover消息用于更新当前IP租约</li>
+<li>若租约到期客户端仍未连接到任何一台服务器，客户端必须立即停止其使用的IP地址然后重新开始获得新的IP地址租约</li>
+</ol>
+<h3 id="DHCP报文格式"><a href="#DHCP报文格式" class="headerlink" title="DHCP报文格式"></a>DHCP报文格式</h3><p>OP(1 Byte)      Htypt(1 Byte)       Hlen(1 Byte)        Hops(1 Byte)<br>                        Xid(4 Bytes)<br>        Secs(2 Bytes)                       Flags(2 Bytes)<br>                        Ciaddr(4 Bytes)<br>                        Yiaddr(4 Bytes)<br>                        Siaddr(4 Bytes)<br>                        Giaddr(4 Bytes)<br>                        Chaddr(16 Bytes)<br>                        Sname(64 Bytes)<br>                        File(128 Bytes)<br>                        Options(可变长度)</p>
+<ul>
+<li>OP<p>报文操作类型。<ul>
+<li>1:请求报文,包含DHCP Discover,DHCP Request,DHCP Release,DHCP Inform和DHCP Decline</li>
+<li>2:应答报文,包含DHCP Offer,DHCP ACK和DHCP NAK</li>
+</ul>
+</p></li>
+<li>Htypt<p>客户端的MAC地址了下,为1时最常见</p></li>
+<li>Hlen<p>客户端的MAC地址长度</p></li>
+<li>Hops<p>DHCP报文经过的DHCP中继的数目,默认为0.DHCP请求报文每经过一个DHCP中继,该字段就会增加1</p></li>
+<li>Xid<p>客户端通过DHCP Discover报文发起一次IP地址请求时选择的随机数,用于标识一次IP地址请求过程.在一次请求中所有报文的Xid都是一样的.</p></li>
+<li>Secs<p>DHCP客户端从获取到IP地址或者续约过程开始到现在所消耗的时间</p></li>
+<li>Flags<p>标志位,只使用第0比特位,是广播应答标志位,用于标识DHCP服务器应答报文是采用单播还是广播发送.0-&gt;单播,1-&gt;广播.(在客户端正式分配了IP地址前的第一次IP地址请求过程中,所有DHCP报文都是以广播形式发送的,IP地址续约,IP地址释放的相关报文都是采用单播方式进行发送)</p></li>
+<li>Ciaddr<p>DHCP客户端的IP地址.仅在DHCP服务器发送的ACK报文中显示,其他报文中显示0.</p></li>
+<li>Yiaddr<p>DHCP服务器分配给客户端的IP地址.仅在DHCP服务器发送的Offer和ACK报文中显示,其他报文中显示为0.</p></li>
+<li>Siaddr<p>下一个为DHCP客户端分配IP地址等信息的DHCP服务器IP地址。仅在DHCP Offer，DHCP ACK报文中显示。</p></li>
+<li>Giaddr<p>DHCP客户端发出请求报文后经过的第一个DHCP中继的IP地址.如未经过DHCP中继则显示0.</p></li>
+<li>Chaddr<p>DHCP客户端的MAC地址</p></li>
+<li>Sname<p>为DHCP客户端分配IP地址的DHCP服务器名称(DNS域名格式).Offer和ACK报文中显示发送报文的DHCP服务器名称,其他报文显示为0.</p></li>
+<li>File<p>DHCP服务器为DHCP客户端指定的启动配置文件名称及路径信息.仅在DHCP Offer报文中显示,其他报文显示为空.</p></li>
+<li>Options<p>可选字段,长度可变,格式为”代码(1字节)+长度(1字节)+数据”</p></li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://yamamic.github.io/2023/11/09/DHCP%E5%8D%8F%E8%AE%AE/" data-id="clorxinoj000064pzdkpsedc2" data-title="DHCP协议" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-dns" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2023/08/25/dns/" class="article-date">
@@ -208,6 +278,57 @@
 
 
   
+    <article id="post-1905-process" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/08/09/1905-process/" class="article-date">
+  <time class="dt-published" datetime="2023-08-08T18:14:57.000Z" itemprop="datePublished">2023-08-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2023/08/09/1905-process/">1905 协议</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h2 id="1905协议"><a href="#1905协议" class="headerlink" title="1905协议"></a>1905协议</h2><ul>
+<li>1905.1 CMDU<ul>
+<li>承载在二层协议上，不需要IP协议栈。包含8字节头和一个TLV列表  <ul>
+<li>头部信息   <img src="/pic/CMDU-head.png" alt="cmdu head"></li>
+<li>TLV格式    <img src="/pic/TLV-format.png" alt="tlv format"></li>
+<li>消息类型   <img src="/pic/cmdu-msgtype1.png">   
+ <img src="/pic/cmdu-msgtype2.png">   
+ <img src="/pic/cmdu-msgtype3.png"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://yamamic.github.io/2023/08/09/1905-process/" data-id="cll33etaf0000gspz0z9ddbfj" data-title="1905 协议" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-vscode远程工作cpu占用率过高问题修改" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2023/08/01/vscode%E8%BF%9C%E7%A8%8B%E5%B7%A5%E4%BD%9Ccpu%E5%8D%A0%E7%94%A8%E7%8E%87%E8%BF%87%E9%AB%98%E9%97%AE%E9%A2%98%E4%BF%AE%E6%94%B9/" class="article-date">
@@ -236,48 +357,6 @@
     </div>
     <footer class="article-footer">
       <a data-url="https://yamamic.github.io/2023/08/01/vscode%E8%BF%9C%E7%A8%8B%E5%B7%A5%E4%BD%9Ccpu%E5%8D%A0%E7%94%A8%E7%8E%87%E8%BF%87%E9%AB%98%E9%97%AE%E9%A2%98%E4%BF%AE%E6%94%B9/" data-id="clks0noi40007cwpz9gyb4ava" data-title="vscode远程工作cpu占用率过高问题修改" class="article-share-link"><span class="fa fa-share">分享</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-1905-process" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2023/07/31/1905-process/" class="article-date">
-  <time class="dt-published" datetime="2023-07-31T05:46:11.617Z" itemprop="datePublished">2023-07-31</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>1905协议</p>
-<ul>
-<li>1905.1 CMDU<ul>
-<li>承载在二层协议上，不需要IP协议栈。包含8字节头和一个TLV列表  <ul>
-<li>头部信息   <img src="/pic/CMDU-head.png" alt="cmdu head"></li>
-<li>TLV格式    <img src="/pic/TLV-format.png" alt="tlv format"></li>
-<li>消息类型   <img src="/pic/cmdu-msgtype1.png">   
- <img src="/pic/cmdu-msgtype2.png">   
- <img src="/pic/cmdu-msgtype3.png"></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://yamamic.github.io/2023/07/31/1905-process/" data-id="cll33etaf0000gspz0z9ddbfj" data-title="" class="article-share-link"><span class="fa fa-share">分享</span></a>
       
       
       
@@ -915,181 +994,6 @@ connect(connnfd, (struct sockaddr*)&amp;cliaddr,sizeof(cliaddr));
 
 
   
-    <article id="post-raw_socket" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2023/07/29/raw_socket/" class="article-date">
-  <time class="dt-published" datetime="2023-07-29T06:45:24.000Z" itemprop="datePublished">2023-07-29</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2023/07/29/raw_socket/">raw socket</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h3 id="头文件"><a href="#头文件" class="headerlink" title="头文件:"></a>头文件:</h3><pre><code>- #include&lt;sys/types.h&gt;
-- #include&lt;sys/socket.h&gt;
-</code></pre>
-<h3 id="函数原型-int-socket-int-domain-int-type-int-protocol"><a href="#函数原型-int-socket-int-domain-int-type-int-protocol" class="headerlink" title="函数原型:   int socket(int domain, int type, int protocol);"></a>函数原型:   int socket(int domain, int type, int protocol);</h3><img src="/pic/socket.jpg" alt="socket层次">
-
-<h4 id="参数说明"><a href="#参数说明" class="headerlink" title="参数说明"></a>参数说明</h4><ul>
-<li>domain:   决定第二层通信域</li>
-<li>type:     决定第三层通信模式</li>
-<li>protocol: 决定第四层通信协议</li>
-</ul>
-<h4 id="3种原始套接字创建方式及其接收发送数据方式"><a href="#3种原始套接字创建方式及其接收发送数据方式" class="headerlink" title="3种原始套接字创建方式及其接收发送数据方式"></a>3种原始套接字创建方式及其接收发送数据方式</h4><ol>
-<li>socket(AF_INET, SOCK_RAW, IPPROTO_XXXX)<ul>
-<li>接收<ul>
-<li>接收的数据是包含IP头的协议类型为IPPROTO_XXX且发往本机的IP数据包</li>
-<li>对于protocol为0(IPPROTO_IP)的raw socket用于接收任何的IP数据包其中的校验和和协议分析由程序自己完成</li>
-</ul>
-</li>
-<li>发送<ul>
-<li>默认情况下    发送的数据是不包含IP头的IP数据包负载部分(如TCP或UDP包)    网络层会自动添加IP头</li>
-<li>如果使用<a href="#setsockopt">setsockopt函数</a>设置了IP_HDRINCL选项后    写入的数据就必须包含IP头    即IP头在用户层由使用者自己构建</li>
-<li>如果protocol是IPPROTO_RAW(255)    这时候    这个socket只能用来发送IP包    而不能接收任何的数据发送的数据需要自己填充IP包头    并且自己计算校验和</li>
-</ul>
-</li>
-<li>IPPROTO_XXX 是&#x2F;etc&#x2F;protocols文件中描述的protocol    指明要接收的包含在IP数据包中的协议包</li>
-</ul>
-</li>
-<li>socket(PF_PACKET, SOCK_RAW, htons(ETH_P_XXX))<ul>
-<li>接收<ul>
-<li>发往本地mac的数据帧</li>
-<li>从本机发送出去的数据帧(第3个参数需要设置为 ETH_P_ALL)</li>
-<li>非发往本地mac的数据帧(网卡需要设置为 promisc 混杂模式)</li>
-</ul>
-</li>
-<li>发送<ul>
-<li>需要自己组织整个以太网数据帧    所有相关的地址使用<a href="#sockaddr_ll">struct sockaddr_ll</a></li>
-<li>相关代码见<a href="#code1">PF_PACKET发送数据</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li>socket(AF_INET, SOCK_PACKET, htons(ETH_P_XXX))<ul>
-<li>此方法已过时</li>
-</ul>
-</li>
-</ol>
-<h4 id="note"><a href="#note" class="headerlink" title="note"></a>note</h4><ul>
-<li>AF_INET和AF_PACKET区别<ul>
-<li>AF_INET无法获取链路层数据    即无法获取以太网头部    </li>
-<li>AF_PACKET面向链路层    可获取链路层数据</li>
-</ul>
-</li>
-<li><h2 id="相关函数和结构体说明-ioctl-setsockopt"><a href="#相关函数和结构体说明-ioctl-setsockopt" class="headerlink" title="相关函数和结构体说明- ioctl- setsockopt"></a>相关函数和结构体说明<br>- ioctl<br>- setsockopt</h2></li>
-</ul>
-<h3 id="以太网数据帧格式"><a href="#以太网数据帧格式" class="headerlink" title="以太网数据帧格式"></a>以太网数据帧格式</h3><img src="/pic/以太网帧格式.png" alt="ethernet">
-
-<ul>
-<li>前同步码: 用来使接收端的适配器在接收 MAC 帧时能够迅速调整时钟频率,使它和发送端的频率相同.前同步码为7个字节,1和0交替</li>
-<li>帧开始定界符: 帧的起始符.为1个字节前6位1和0交替,最后的两个连续的1表示告诉接收端适配器：“帧信息要来了,准备接收”.</li>
-<li>目的地址: 接收帧的网络适配器的物理地址(MAC地址)为6个字节(48比特)作用是当网卡接收到一个数据帧时,首先会检查该帧的目的地址是否与当前适配器的物理地址相同,如果相同就会进一步处理；如果不同则直接丢弃</li>
-<li>源地址: 发送帧的网络适配器的物理地址(MAC地址)为6个字节(48比特)</li>
-<li>类型: 上层协议的类型由于上层协议众多,所以在处理数据的时候必须设置该字段,标识数据交付哪个协议处理例如:字段为 0x0800 时,表示将数据交付给 IP 协议</li>
-<li>数据: 也称为效载荷.表示交付给上层的数据以太网帧数据长度最小为 46 字节.最大为 1500 字节如果不足 46 字节时,会填充到最小长度最大值也叫最大传输单元(MTU).在 Linux 中,使用 ifconfig 命令可以查看该值,通常为 1500</li>
-<li>帧检验序列 FCS: 检测该帧是否出现差错,占 4 个字节(32 比特)发送方计算帧的循环冗余码校验(CRC)值,把这个值写到帧里接收方计算机重新计算 CRC,与 FCS 字段的值进行比较如果两个值不相同则表示传输过程中发生了数据丢失或改变.这时就需要重新传输这一帧</li>
-</ul>
-<h3 id="SOCK-RAW-接收-数据包的原理"><a href="#SOCK-RAW-接收-数据包的原理" class="headerlink" title="SOCK_RAW 接收 数据包的原理"></a>SOCK_RAW 接收 数据包的原理</h3><ol>
-<li><p>网卡对该数据帧进行硬过滤(数据链路层过滤)———— 二层<br>首先进行数据链路层校验和处理,如果校验和出错,直接仍掉；然后根据网卡的模式不同会有不同的动作：如果设置了promisc混杂模式的话.则不做任何过滤直接交给下一层输入,否则非本机mac或者广播mac会被直接丢弃</p>
-</li>
-<li><p>向用户层递交数据链路层数据帧 ———— SOCK_RAW捕获数据链路层数据帧<br>在进入网络层之前,系统会检查系统中是否有通过socket(AF_PACKET, SOCK_RAW, …)创建的套接字；如果有并且与指定的协议相符的话.系统就给每个这样的socket接收缓冲区发送一个数据帧拷贝然后进入网络层</p>
-</li>
-<li><p>进入网络层(IP层过滤)———— 三层<br>IP层会对该数据包进行软过滤————就是检查校验或者丢弃非本机IP或者广播IP的数据包等</p>
-</li>
-<li><p>向用户层递交网络层数据包 ———— SOCK_RAW捕获网络层IP数据包<br>在进入运输层(如TCP、UDP例程)之前,系统会检查系统中是否有通过socket(AF_INET, SOCK_RAW, …)创建的套接字；如果有的话并且协议相符.系统就给每个这样的socket接收缓冲区发送一个数据包拷贝(不管在任何情况下,永远都包含IP数据包头)然后进入运输层</p>
-</li>
-<li><p>进入运输层(如TCP、UDP等例程)———— 四层<br>这一步由系统内核来处理运输层的协议,用户层无法干涉.处理完之后,如果合法将向用户层递交数据,进而进入用户层处理</p>
-</li>
-<li><p>进入用户层(如HTTP、FTP等)<br>这一层在用户态,由用户应用程序来完成</p>
-</li>
-</ol>
-<h3 id="注："><a href="#注：" class="headerlink" title="注："></a>注：</h3><ol>
-<li><p>如果校验和出错的话,内核会直接丢弃该数据包的；而不会拷贝给sock_raw套接字,因为校验和都出错了,数据肯定有问题的.其包括所有信息都没有意义了.所以sock_raw不需要关心数据链路层和IP层的校验和问题</p>
-</li>
-<li><p>在没有递交给其他协议处理器(内核协议处理器)之前,先递交给所有的 Raw Socket.换句话说,就是 Raw Socket 优先处理</p>
-</li>
-</ol>
-<h3 id="PF-PACKET发送数据"><a href="#PF-PACKET发送数据" class="headerlink" title="PF_PACKET发送数据"></a><dev id="code1">PF_PACKET发送数据</dev></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">int sockfd = socket(PF_PACKET, SOCK_RAW, htons(ETH_P_ALL));</span><br><span class="line">struct sockaddr_ll sll;</span><br><span class="line">memset( &amp;sll, 0, sizeof(sll) );</span><br><span class="line">sll.sll_family = AF_PACKET;</span><br><span class="line">struct ifreq ifstruct;</span><br><span class="line">strcpy(ifstruct.ifr_name, &quot;eth0&quot;);</span><br><span class="line">ioctl(sockfd, SIOCGIFINDEX, &amp;ifstruct);</span><br><span class="line">sll.sll_ifindex = ifstruct.ifr_ifindex;</span><br><span class="line">sll.sll_protocol = htons(ETH_P_ALL);</span><br><span class="line">if(bind(fd, (struct sockaddr *) &amp;sll, sizeof(sll)) == -1 )</span><br><span class="line">    perror(&quot;bind()&quot;);</span><br><span class="line"></span><br><span class="line">int set_promisc(char *interface, int fd) &#123;</span><br><span class="line">    struct ifreq ifr;</span><br><span class="line">    strcpy(ifr.ifr_name, interface);</span><br><span class="line">    if(ioctl(fd, SIOCGIFFLAGS, &amp;ifr) == -1) &#123;</span><br><span class="line">        perror(&quot;iotcl()&quot;);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line">    ifr.ifr_flags |= IFF_PROMISC;</span><br><span class="line">    if(ioctl(fd, SIOCSIFFLAGS, &amp;ifr) == -1) &#123;</span><br><span class="line">        perror(&quot;iotcl()&quot;);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int unset_promisc(char *interface, int fd) &#123;</span><br><span class="line">    struct ifreq ifr;</span><br><span class="line">    strcpy(ifr.ifr_name, interface);</span><br><span class="line">    if(ioctl(fd, SIOCGIFFLAGS, &amp;ifr) == -1) &#123;</span><br><span class="line">        perror(&quot;iotcl()&quot;);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line">    ifr.ifr_flags &amp;= ~IFF_PROMISC;</span><br><span class="line">    if(ioctl(fd, SIOCSIFFLAGS, &amp;ifr) == -1) &#123;</span><br><span class="line">        perror(&quot;iotcl()&quot;);</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="sockaddr-ll结构体"><a href="#sockaddr-ll结构体" class="headerlink" title="sockaddr_ll结构体"></a><dev id="sockaddr_ll">sockaddr_ll结构体</dev></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">struct sockaddr_ll &#123;  </span><br><span class="line">        unsigned short  sll_family;  </span><br><span class="line">        __be16          sll_protocol;  </span><br><span class="line">        int             sll_ifindex;  </span><br><span class="line">        unsigned short  sll_hatype;  </span><br><span class="line">        unsigned char   sll_pkttype;  </span><br><span class="line">        unsigned char   sll_halen;  </span><br><span class="line">        unsigned char   sll_addr[8];  </span><br><span class="line">&#125;;  </span><br></pre></td></tr></table></figure>
-<p><em>参数说明</em></p>
-<ul>
-<li>sll_family:   地址族</li>
-<li>sll_protocol: 上层协议类型,可查找&lt;linux&#x2F;if_ether.h&gt;</li>
-<li>sll_ifindex:  interface索引,0匹配所有网卡源文件&lt;linxu&#x2F;netdevice.h&gt;</li>
-<li>sll_hatype:   ARP硬件地址类型可选,源文件&lt;net&#x2F;if_arp.h&gt;</li>
-<li>sll_pkttype:  包含分组类型<ul>
-<li>有效的分组类型：<ul>
-<li>目标地址是本地主机的分组用的 PACKET_HOST    </li>
-<li>物理层广播分组用的 PACKET_BROADCAST     </li>
-<li>发送到一个物理层多路广播地址的分组用的 PACKET_MULTICAST    </li>
-<li>在混杂(promiscuous)模式下的设备驱动器发向其他主机的分组用的PACKET_OTHERHOST    </li>
-<li>本源于本地主机的分组被环回到分组套接口用的 PACKET_OUTGOING</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>sll_addr和sll_halen:  包括物理层(例如IEEE802.3)地址和地址长度</li>
-</ul>
-<h4 id="note-1"><a href="#note-1" class="headerlink" title="note"></a><em>note</em></h4><p>当发送数据包时，指定 sll_family, sll_protocol，选择绑定(sll_addr, sll_halen) 或sll_ifindex 就足够了。其它字段设置为0； sll_hatype和 sll_pkttype是在接收数据包时使用的； 如果要bind, 只需要使用 sll_protocol和 sll_ifindex；</p>
-<ul>
-<li>获取接口的物理地址<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">struct ifreq ifr;</span><br><span class="line"></span><br><span class="line">strcpy(ifr.ifr_name, &quot;eth0&quot;);</span><br><span class="line">ioctl(sockfd, SIOCGIFHWADDR, &amp;ifr);</span><br></pre></td></tr></table></figure></li>
-<li>获取网卡接口的序号<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">struct  sockaddr_ll  sll;</span><br><span class="line">struct ifreq ifr;</span><br><span class="line"></span><br><span class="line">strcpy(ifr.ifr_name, &quot;eth0&quot;);</span><br><span class="line">ioctl(sockfd, SIOCGIFINDEX, &amp;ifr);</span><br><span class="line">sll.sll_ifindex = ifr.ifr_ifindex;</span><br></pre></td></tr></table></figure></li>
-</ul>
-<h3 id="ioctl函数使用说明"><a href="#ioctl函数使用说明" class="headerlink" title="ioctl函数使用说明"></a><dev id="ioctl">ioctl函数使用说明</dev></h3><p>作为那些不适合归入其他精细定义类别的特性的系统接口(即特殊的接口),POSIX一直致力摆脱处于标准化过程中的特定功能的ioctl接口,<br>如使用新的函数sockatmark函数取代SIOCATMARK,但是与网络相关并且依赖于实现的特性保留的ioctl请求为数依然不少,主要用于<strong><em>获取接口信息、访问路由表、访问ARP高速缓存</em></strong>等等。</p>
-<h4 id="头文件-include"><a href="#头文件-include" class="headerlink" title="头文件 #include&lt;sys&#x2F;ioctl.h&gt;"></a>头文件 #include&lt;sys&#x2F;ioctl.h&gt;</h4><h4 id="函数原型-int-ioctl-int-fd-unsigned-long-request-…"><a href="#函数原型-int-ioctl-int-fd-unsigned-long-request-…" class="headerlink" title="函数原型   int ioctl(int fd, unsigned long request, …)"></a>函数原型   int ioctl(int fd, unsigned long request, …)</h4><ul>
-<li>参数<ul>
-<li>fd: 文件描述符</li>
-<li>request: 请求的类型<ul>
-<li>相关的部分类型:    <ul>
-<li>SIOCG开头:  表示获取信息</li>
-<li>SIOCS开头:  表示设置参数<br>- SIOCGHWADDR	:	获取硬件地址</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>…:    可变参数arg</li>
-</ul>
-</li>
-<li>返回值<ul>
-<li>成功    0</li>
-<li>失败    -1并设置全局变量errorno</li>
-</ul>
-</li>
-</ul>
-<h4 id="操作请求"><a href="#操作请求" class="headerlink" title="操作请求:"></a>操作请求:</h4><ul>
-<li><h2 id="接口相关-包括接口的索引、名字、标志、ip地址、物理地址、网卡映射、MTU等。这些信息定义在struct-ifreq结构体中-头文件-结构体原型-struct-ifreq-define-IFHWADDRLEN6-union-charifrn-name-IFNAMSIZ-if-name-e-g-“en0”-ifr-ifrn-union-structsockaddr-ifru-addr-structsockaddr-ifru-dstaddr-structsockaddr-ifru-broadaddr-structsockaddr-ifru-netmask-struct-sockaddr-ifru-hwaddr-shortifru-flags-intifru-ivalue-intifru-mtu-struct-ifmap-ifru-map-charifru-slave-IFNAMSIZ-Just-fits-the-size-charifru-newname-IFNAMSIZ-void-ifru-data-structif-settings-ifru-settings-ifr-ifru-SO-PASSCRED-允许或禁止SCM-CREDENTIALS-控制消息的接收-SO-TIMESTAMP-打开或关闭数据报中的时间戳接收-SO-RCVLOWAT-设置接收数据前的缓冲区内的最小字节数-SO-RCVTIMEO-设置接收超时时间-SO-SNDTIMEO-设置发送超时时间-SO-BINDTODEVICE-将套接字绑定到一个特定的设备上-SO-ATTACH-FILTER和SO-DETACH-FILTER"><a href="#接口相关-包括接口的索引、名字、标志、ip地址、物理地址、网卡映射、MTU等。这些信息定义在struct-ifreq结构体中-头文件-结构体原型-struct-ifreq-define-IFHWADDRLEN6-union-charifrn-name-IFNAMSIZ-if-name-e-g-“en0”-ifr-ifrn-union-structsockaddr-ifru-addr-structsockaddr-ifru-dstaddr-structsockaddr-ifru-broadaddr-structsockaddr-ifru-netmask-struct-sockaddr-ifru-hwaddr-shortifru-flags-intifru-ivalue-intifru-mtu-struct-ifmap-ifru-map-charifru-slave-IFNAMSIZ-Just-fits-the-size-charifru-newname-IFNAMSIZ-void-ifru-data-structif-settings-ifru-settings-ifr-ifru-SO-PASSCRED-允许或禁止SCM-CREDENTIALS-控制消息的接收-SO-TIMESTAMP-打开或关闭数据报中的时间戳接收-SO-RCVLOWAT-设置接收数据前的缓冲区内的最小字节数-SO-RCVTIMEO-设置接收超时时间-SO-SNDTIMEO-设置发送超时时间-SO-BINDTODEVICE-将套接字绑定到一个特定的设备上-SO-ATTACH-FILTER和SO-DETACH-FILTER" class="headerlink" title="接口相关:    包括接口的索引、名字、标志、ip地址、物理地址、网卡映射、MTU等。这些信息定义在struct ifreq结构体中  - 头文件:    	&lt;net&#x2F;if.h&gt;  - 结构体原型:    - &#96;&#96;&#96;      struct ifreq {      #define IFHWADDRLEN	6          union          {              char	ifrn_name[IFNAMSIZ];		&#x2F;* if name, e.g. “en0” &#x2F;          } ifr_ifrn;          union {              struct	sockaddr ifru_addr;              struct	sockaddr ifru_dstaddr;              struct	sockaddr ifru_broadaddr;              struct	sockaddr ifru_netmask;              struct  sockaddr ifru_hwaddr;              short	ifru_flags;              int	ifru_ivalue;              int	ifru_mtu;              struct  ifmap ifru_map;              char	ifru_slave[IFNAMSIZ];	&#x2F; Just fits the size *&#x2F;              char	ifru_newname[IFNAMSIZ];              void *	ifru_data;              struct	if_settings ifru_settings;          } ifr_ifru;      };         - SO_PASSCRED    允许或禁止SCM_CREDENTIALS 控制消息的接收   - SO_TIMESTAMP    打开或关闭数据报中的时间戳接收   - SO_RCVLOWAT    设置接收数据前的缓冲区内的最小字节数   - SO_RCVTIMEO    设置接收超时时间   - SO_SNDTIMEO    设置发送超时时间   - SO_BINDTODEVICE    将套接字绑定到一个特定的设备上   - SO_ATTACH_FILTER和SO_DETACH_FILTER"></a>接口相关:    包括接口的索引、名字、标志、ip地址、物理地址、网卡映射、MTU等。这些信息定义在struct ifreq结构体中<br>  - 头文件:    	&lt;net&#x2F;if.h&gt;<br>  - 结构体原型:<br>    - &#96;&#96;&#96;<br>      struct ifreq {<br>      #define IFHWADDRLEN	6<br>          union<br>          {<br>              char	ifrn_name[IFNAMSIZ];		&#x2F;* if name, e.g. “en0” <em>&#x2F;<br>          } ifr_ifrn;<br><br>          union {<br>              struct	sockaddr ifru_addr;<br>              struct	sockaddr ifru_dstaddr;<br>              struct	sockaddr ifru_broadaddr;<br>              struct	sockaddr ifru_netmask;<br>              struct  sockaddr ifru_hwaddr;<br>              short	ifru_flags;<br>              int	ifru_ivalue;<br>              int	ifru_mtu;<br>              struct  ifmap ifru_map;<br>              char	ifru_slave[IFNAMSIZ];	&#x2F;</em> Just fits the size *&#x2F;<br>              char	ifru_newname[IFNAMSIZ];<br>              void *	ifru_data;<br>              struct	if_settings ifru_settings;<br>          } ifr_ifru;<br>      };<br>      <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">### &lt;dev id=&quot;setsockopt&quot;&gt;setsockopt函数使用说明&lt;/dev&gt;</span><br><span class="line">#### 头文件 #include&lt;sys/socket.h&gt;</span><br><span class="line">#### 函数原型   int setsockopt(int socket, int level, int option_name, const void* option_value, size_t option_len);</span><br><span class="line">#### 参数说明</span><br><span class="line">- socket:   套接字描述符</span><br><span class="line">- level:    被设置的选项级别    SOL_SOCKET被用于在套接字级别上设置选项</span><br><span class="line">- option_name:  指定准备设置的选项</span><br><span class="line">  - 在套接字级别(SOL_SOCKET)上可选的取值</span><br><span class="line">    - SO_DEBUG  调试信息</span><br><span class="line">    - SO_REUSEADDR  地址复用功能</span><br><span class="line">    - SO_DONTROUTE  路由查找功能</span><br><span class="line">    - SO_BROADCAST  发送广播数据</span><br><span class="line">    - SO_SNDBUF    设置发送缓冲区的大小</span><br><span class="line">    - SO_RCVBUF    设置接收缓冲区的大小</span><br><span class="line">    - SO_KEEPALIVE    套接字保活</span><br><span class="line">    - SO_OOBINLINE    紧急数据放入普通数据流</span><br><span class="line">    - SO_NO_CHECK    打开或关闭校验和</span><br><span class="line">    - SO_PRIORITY    设置在套接字发送的所有包的协议定义优先权Linux通过这一值来排列网络队列</span><br><span class="line">    这个值在0到6之间(包括0和6)    由option_value指定赋给sock-&gt;sk-&gt;sk_priority</span><br><span class="line">    - SO_LINGER    如果选择此选项, close或 shutdown将等到所有套接字里排队的消息成功发送或到达延迟时间后&gt;才会返回. 否则, 调用将立即返回</span><br><span class="line">      - 该选项的参数(option_value)是一个linger结构：</span><br><span class="line">      - ```</span><br><span class="line">        struct linger &#123;</span><br><span class="line">            int   l_onoff;   </span><br><span class="line">            int   l_linger;  </span><br><span class="line">        &#125;;</span><br></pre></td></tr></table></figure><br>   - SO_PASSCRED    允许或禁止SCM_CREDENTIALS 控制消息的接收<br>   - SO_TIMESTAMP    打开或关闭数据报中的时间戳接收<br>   - SO_RCVLOWAT    设置接收数据前的缓冲区内的最小字节数<br>   - SO_RCVTIMEO    设置接收超时时间<br>   - SO_SNDTIMEO    设置发送超时时间<br>   - SO_BINDTODEVICE    将套接字绑定到一个特定的设备上<br>   - SO_ATTACH_FILTER和SO_DETACH_FILTER</h2></li>
-<li>option_value: 设置选项的值</li>
-<li>option_len:   option_value的长度</li>
-</ul>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://yamamic.github.io/2023/07/29/raw_socket/" data-id="clks0noi40008cwpz8o810p08" data-title="raw socket" class="article-share-link"><span class="fa fa-share">分享</span></a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -1113,7 +1017,7 @@ connect(connnfd, (struct sockaddr*)&amp;cliaddr,sizeof(cliaddr));
   <div class="widget-wrap">
     <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/11/">十一月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/08/">八月 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/07/">七月 2023</a></li></ul>
     </div>
   </div>
 
@@ -1126,6 +1030,10 @@ connect(connnfd, (struct sockaddr*)&amp;cliaddr,sizeof(cliaddr));
       <ul>
         
           <li>
+            <a href="/2023/11/09/DHCP%E5%8D%8F%E8%AE%AE/">DHCP协议</a>
+          </li>
+        
+          <li>
             <a href="/2023/08/25/dns/">dns server</a>
           </li>
         
@@ -1134,15 +1042,11 @@ connect(connnfd, (struct sockaddr*)&amp;cliaddr,sizeof(cliaddr));
           </li>
         
           <li>
+            <a href="/2023/08/09/1905-process/">1905 协议</a>
+          </li>
+        
+          <li>
             <a href="/2023/08/01/vscode%E8%BF%9C%E7%A8%8B%E5%B7%A5%E4%BD%9Ccpu%E5%8D%A0%E7%94%A8%E7%8E%87%E8%BF%87%E9%AB%98%E9%97%AE%E9%A2%98%E4%BF%AE%E6%94%B9/">vscode远程工作cpu占用率过高问题修改</a>
-          </li>
-        
-          <li>
-            <a href="/2023/07/31/1905-process/">(no title)</a>
-          </li>
-        
-          <li>
-            <a href="/2023/07/31/mapd-process/">mapd_process</a>
           </li>
         
       </ul>
